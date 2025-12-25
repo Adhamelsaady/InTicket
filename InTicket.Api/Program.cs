@@ -1,5 +1,6 @@
 using InTicket.Domain;
 using InTicket.Persistence;
+using InTicket.Application;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +14,23 @@ builder.Services.AddDbContext<InTicketDbContext>(options =>
 
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddAuthentication(builder.Configuration);
+builder.Services.AddApplicationService();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        await SeedData.InitializeAsync(services);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        Console.WriteLine("Problem");
+    }
+}
 
 if (app.Environment.IsDevelopment())
 {

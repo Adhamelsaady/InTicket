@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 public class ApplicationUser : IdentityUser
 {
-    private string NationalId { get; set; } = string.Empty;
-    private string FirstName { get; set; } = string.Empty;
-    private string LastName { get; set; } = string.Empty;
-    private Guid InTicketId { get; set; }
+    public string NationalId { get; set; } = string.Empty;
+    public string FirstName { get; set; } = string.Empty;
+    public string LastName { get; set; } = string.Empty;
+    public Guid InTicketId { get; set; }
+    public bool IsAdmin { get; set; }
 }

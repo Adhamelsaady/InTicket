@@ -17,12 +17,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\InTicket.Application\InTicket.Application.csproj" />
       <ProjectReference Include="..\InTicket.Domain\InTicket.Domain.csproj" />
       <ProjectReference Include="..\InTicket.Persistence\InTicket.Persistence.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Controllers\" />
     </ItemGroup>
 
 </Project>

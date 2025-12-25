@@ -4,6 +4,7 @@ using InTicket.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InTicket.Persistence.Migrations
 {
     [DbContext(typeof(InTicketDbContext))]
-    partial class InTicketDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251225140903_AddCustomUserFields")]
+    partial class AddCustomUserFields
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,9 +50,6 @@ namespace InTicket.Persistence.Migrations
 
                     b.Property<Guid>("InTicketId")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("IsAdmin")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
