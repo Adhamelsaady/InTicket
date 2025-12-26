@@ -254,3 +254,6 @@ Thumbs.db
 # JetBrains Rider
 .idea/
 *.sln.iml
+
+InTicket.Api/appsettings.json
+InTicket.Api/appsettings.Development.json
