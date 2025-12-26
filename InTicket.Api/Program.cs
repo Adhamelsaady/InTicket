@@ -1,6 +1,7 @@
 using InTicket.Domain;
 using InTicket.Persistence;
 using InTicket.Application;
+using InTicket.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<InTicketDbContext>(options =>
 builder.Services.AddIdentityServices(builder.Configuration);
 builder.Services.AddAuthentication(builder.Configuration);
 builder.Services.AddApplicationService();
+builder.Services.AddInfrastructure();
 
 var app = builder.Build();
 

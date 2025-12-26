@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using InTicket.Application.Contracts;
+using InTicket.Application.Contracts.Infrasructure;
 using InTicket.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,7 @@ public static class ApplicationServiceRegistration
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddScoped<IAuthService , AuthService>();
+        services.AddScoped<IOtpService, OtpService>();
         return services;
     }
 }
