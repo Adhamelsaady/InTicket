@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using InTicket.Application.DTOs;
+using InTicket.Application.Feauters.Authentication.Register;
 using InTicket.Domain;
 
 namespace InTicket.Application.Profiles;
@@ -8,8 +8,6 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
-        CreateMap<ApplicationUser, RegisterDto>().ReverseMap();
-        
-        
+        CreateMap<ApplicationUser, RegisterCommand>().ReverseMap();
     }
 }

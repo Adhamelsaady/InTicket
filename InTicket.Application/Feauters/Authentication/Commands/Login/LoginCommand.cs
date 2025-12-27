@@ -1,8 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using InTicket.Application.Feauters.Authentication.Register;
+using MediatR;
 
-namespace InTicket.Application.DTOs;
+namespace InTicket.Application.Feauters.Authentication.Login;
 
-public class LoginDto
+public class LoginCommand : IRequest<AuthenticationResponse>
 {
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress(ErrorMessage = "Invalid email format")]

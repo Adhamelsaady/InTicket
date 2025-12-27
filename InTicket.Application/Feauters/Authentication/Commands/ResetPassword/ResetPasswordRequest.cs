@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 
-namespace InTicket.Application.DTOs;
+namespace InTicket.Application.Feauters.Authentication.Commands.ResetPassword;
 
-public class ResetPasswordDto
+public class ResetPasswordRequest : IRequest<bool>
 {
     [Required]
     [EmailAddress]

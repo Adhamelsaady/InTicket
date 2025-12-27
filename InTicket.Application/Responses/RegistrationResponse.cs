@@ -1,6 +1,6 @@
-﻿namespace InTicket.Application.DTOs;
+﻿namespace InTicket.Application.Feauters.Authentication.Register;
 
-public class AuthResponseDto
+public class AuthenticationResponse
 {
     public string Token { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;

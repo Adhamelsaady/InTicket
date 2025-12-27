@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 
-namespace InTicket.Application.DTOs;
+namespace InTicket.Application.Feauters.Authentication.Confirmations.EmailConfirmations;
 
-public class ConfirmEmailDto
+public class EmailConfirmationRequest : IRequest<bool>
 {
     [Required]
     [EmailAddress]
