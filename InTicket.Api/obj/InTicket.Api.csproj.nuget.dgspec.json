@@ -388,6 +388,9 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
+              "D:\\InTicket\\InTicket.Application\\InTicket.Application.csproj": {
+                "projectPath": "D:\\InTicket\\InTicket.Application\\InTicket.Application.csproj"
+              },
               "D:\\InTicket\\InTicket.Domain\\InTicket.Domain.csproj": {
                 "projectPath": "D:\\InTicket\\InTicket.Domain\\InTicket.Domain.csproj"
               }

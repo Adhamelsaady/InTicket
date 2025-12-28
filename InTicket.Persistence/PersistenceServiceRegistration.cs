@@ -1,4 +1,6 @@
-﻿using InTicket.Domain;
+﻿using InTicket.Application.Contracts.Presistance;
+using InTicket.Domain;
+using InTicket.Persistence.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,5 +25,7 @@ public static class PersistenceServiceRegistration
             })
             .AddEntityFrameworkStores<InTicketDbContext>()
             .AddDefaultTokenProviders();
+        services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+        services.AddScoped<IMatchRepository, MatchRepository>();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using InTicket.Application.Contracts;
 using InTicket.Application.Contracts.Infrasructure;
+using InTicket.Application.Contracts.Presistance;
 using InTicket.Application.Services;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;

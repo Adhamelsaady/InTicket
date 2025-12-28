@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\InTicket.Application\InTicket.Application.csproj" />
       <ProjectReference Include="..\InTicket.Domain\InTicket.Domain.csproj" />
     </ItemGroup>
 
