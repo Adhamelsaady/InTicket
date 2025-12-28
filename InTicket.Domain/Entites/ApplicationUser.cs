@@ -14,4 +14,7 @@ public class ApplicationUser : IdentityUser
     public DateTime? PasswordResetOtpExpiration { get; set; }
     public int OtpAttempts { get; set; } = 0;
     public DateTime? LastOtpAttemptAt { get; set; }
+    
+    public Guid? FavoriteTeamId { get; set; }
+    public Team? FavoriteTeam { get; set; }
 }
