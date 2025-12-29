@@ -13,6 +13,7 @@ public class Match : BaseEvent
     public int? Round { get; set; }  
     
     public string StadiumName { get; set; } = string.Empty;
+    
     public int StadiumCapacity { get; set; }
     
     public DateTime? FanPriorityBookingStart { get; set; }  
