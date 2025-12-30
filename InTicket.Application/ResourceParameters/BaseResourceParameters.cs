@@ -13,4 +13,6 @@ public abstract class  BaseResourceParameters
         set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
     }
     public string? SearchQuery { get; set; }
+    public DateTime? FromDate { get; set; }
+    public DateTime? ToDate { get; set; }
 }

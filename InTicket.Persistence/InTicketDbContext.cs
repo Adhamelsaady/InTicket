@@ -13,7 +13,7 @@ public class InTicketDbContext : IdentityDbContext<ApplicationUser>
     
     public DbSet<BaseEvent> BaseEvents { get; set; }
     public DbSet<Match> Matches { get; set; }
-    public DbSet<Concert> Events { get; set; }
+    public DbSet<Concert> Concerts { get; set; }
     public DbSet<Team> Teams { get; set; }
  
     protected override void OnModelCreating(ModelBuilder modelBuilder)

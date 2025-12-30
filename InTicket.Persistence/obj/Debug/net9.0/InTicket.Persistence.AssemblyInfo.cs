@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InTicket.Persistence")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3bc5d394c58589a3f70d0ce8301ea24badb2309e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ea32bfeff8e444e884e275b1a705f976acdc8639")]
 [assembly: System.Reflection.AssemblyProductAttribute("InTicket.Persistence")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InTicket.Persistence")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

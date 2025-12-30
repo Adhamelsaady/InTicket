@@ -2,8 +2,6 @@
 
 public class MatchResourceParameters : BaseResourceParameters
 {
-    public DateTime? FromDate { get; set; }
-    public DateTime? ToDate { get; set; }
     public Guid? TeamId { get; set; }  
     public Guid? HomeTeamId { get; set; }
     public Guid? AwayTeamId { get; set; }
