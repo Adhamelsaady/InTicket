@@ -61,7 +61,6 @@ public class MatchController : ControllerBase
     [Authorize(Roles = "Admin")]  
     public async Task<IActionResult> DeleteMatch(Guid id)
     {
-        // This is not working as intended 
         var request = new DeleteMatchRequest { Id = id };
         var result = await _mediator.Send(request);
 

@@ -16,6 +16,7 @@ public class DeleteMatchRequestHandler : IRequestHandler<DeleteMatchRequest , bo
             return false;
         }
         await _matchRepository.DeleteAsync(matchToDelete);
+        await _matchRepository.SaveChangesAsync();
         return true;
     }
 }

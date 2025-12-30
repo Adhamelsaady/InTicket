@@ -1,4 +1,6 @@
-﻿using InTicket.Application.Feauters.Concerts.Queries.GetAllConcerts;
+﻿using InTicket.Application.Feauters.Concerts.Commands.CreateConcert;
+using InTicket.Application.Feauters.Concerts.Commands.DeleteConcert;
+using InTicket.Application.Feauters.Concerts.Queries.GetAllConcerts;
 using InTicket.Application.Feauters.Concerts.Queries.GetConcertById;
 using InTicket.Application.ResourceParameters;
 using InTicket.Domain;
@@ -16,7 +18,7 @@ public class ConcertController : ControllerBase
 
     public ConcertController(IMediator mediator) => _mediator = mediator;
 
-    [HttpGet][AllowAnonymous]
+    [HttpGet(Name = "GetAllConcerts")][AllowAnonymous]
     public async Task<IActionResult> GetAllConcerts([FromQuery] ConcertResourceParameters concertResourceParameters)
     {
         var getAllConcertsRequest = new GetAllConcertsRequest() {ConcertResourceParameters = concertResourceParameters};
@@ -24,11 +26,42 @@ public class ConcertController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("{id}")]
+    [HttpGet("{id}" , Name = "GetConcertById")]
     public async Task<IActionResult> GetConcertById(Guid id)
     {
         var getConcertByIdRequest = new GetConcertByIdRequest() { Id = id };
         var concert = await _mediator.Send(getConcertByIdRequest);
         return Ok(concert);
+    }
+
+    [HttpPost]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> CreateConcert([FromBody] CreateConcertRequest concertRequest)
+    {
+        if (!ModelState.IsValid)
+        {
+            return  BadRequest(ModelState);
+        }        
+        var result = await _mediator.Send(concertRequest);
+       
+        return CreatedAtRoute(
+            "GetConcertById", 
+            new { id = result.Id },
+            result);
+    }
+
+    [HttpDelete("{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> DeleteConcert(Guid id)
+    {
+        var deleteRequest = new DeleteConcertRequest() { Id = id };
+        var result = await _mediator.Send(deleteRequest);
+
+        if (!result)
+        {
+            return NotFound(new { message = $"Concert with ID {id} not found" });
+        }
+
+        return NoContent();
     }
 }
