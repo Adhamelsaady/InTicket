@@ -16,17 +16,17 @@ public class InTicketDbContext : IdentityDbContext<ApplicationUser>
     public DbSet<Match> Matches { get; set; }
     public DbSet<Concert> Concerts { get; set; }
     public DbSet<Team> Teams { get; set; } 
+    
     public DbSet<Delegation> Delegations { get; set; }
  
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        
         modelBuilder.ConfigureBaseEvent();
         modelBuilder.ConfigureMatches();
         modelBuilder.ConfigureConcerts();
-        modelBuilder.ConfigureTeams();
         modelBuilder.ConfigureDelegations();
+        modelBuilder.ConfigureTeams();
    
     }
 }

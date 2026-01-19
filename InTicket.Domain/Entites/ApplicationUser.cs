@@ -14,14 +14,12 @@ public class ApplicationUser : IdentityUser
     public DateTime? PasswordResetOtpExpiration { get; set; }
     public int OtpAttempts { get; set; } = 0;
     public DateTime? LastOtpAttemptAt { get; set; }
+    
     public Guid? FavoriteTeamId { get; set; }
+    
     public Team? FavoriteTeam { get; set; }
     
-    // Users who are delegated by me (people I can book for)
-    public ICollection<Delegation> DelegationsGiven { get; set; } = new List<Delegation>();
-    
-    // Users who delegated me (people I can book FOR)
-    public ICollection<Delegation> DelegationsReceived { get; set; } = new List<Delegation>();
-    
-    
+    public Delegation? DelegationGiven { get; set; }
+
+    public ICollection<Delegation>? DelegationsReceived { get; set; } = new List<Delegation>();
 }

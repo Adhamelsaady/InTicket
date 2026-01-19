@@ -9,15 +9,18 @@ public static class DelegationsConfiguration
     {
         modelBuilder.Entity<Delegation>(entity =>
         {
+            entity.ToTable("Delegations"); 
             entity.HasKey(d => d.Id);
             entity.HasOne(d => d.Delegator)
-                .WithMany(u => u.DelegationsGiven)
-                .HasForeignKey(d => d.DelegatorId)
-                .OnDelete(DeleteBehavior.Restrict);  
+                .WithOne(u => u.DelegationGiven)
+                .HasForeignKey<Delegation>(d => d.DelegatorId)
+                .OnDelete(DeleteBehavior.NoAction)  
+                .IsRequired(); 
             entity.HasOne(d => d.Delegate)
                 .WithMany(u => u.DelegationsReceived)
                 .HasForeignKey(d => d.DelegateId)
-                .OnDelete(DeleteBehavior.Restrict);  
+                .OnDelete(DeleteBehavior.NoAction)  
+                .IsRequired(); 
         });
     }
 }

@@ -17,7 +17,7 @@ public class ConcertsRepository : IConcertsRepository
 
     public async Task<PagedResult<Concert>> GetAllConcerts(ConcertResourceParameters concertResourceParameters)
     {
-         var query = _dbContext.Concerts.AsQueryable();
+        var query = _dbContext.Concerts.AsQueryable();
         if (concertResourceParameters == null)
         {
             throw new ArgumentNullException(nameof(concertResourceParameters));
