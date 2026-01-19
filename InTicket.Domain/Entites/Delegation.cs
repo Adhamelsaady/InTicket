@@ -8,7 +8,5 @@ public class Delegation
     public string DelegateId { get; set; } 
     public ApplicationUser Delegate { get; set; } = null!;
     public string DelegateNationalId { get; set; }
-    public bool IsActive { get; set; } = true;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    public DateTime? RevokedAt { get; set; }
 }

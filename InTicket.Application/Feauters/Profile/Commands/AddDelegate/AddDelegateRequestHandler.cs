@@ -48,7 +48,6 @@ public class AddDelegateRequestHandler : IRequestHandler<AddDelegateRequest, boo
             DelegateNationalId = request.DelegateNationalId,
             DelegateId = delegateUser.Id,
             CreatedAt = DateTime.UtcNow,
-            IsActive = true
         };
 
         await _delegationsRepository.AddAsync(resultedDelegate);

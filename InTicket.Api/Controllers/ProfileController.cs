@@ -1,10 +1,10 @@
 ﻿using System.Security.Claims;
 using InTicket.Application.Feauters.Profile.Commands.AddDelegate;
+using InTicket.Application.Feauters.Profile.Commands.DeleteDelegation;
 using InTicket.Application.Feauters.Profile.Queries.GetMyDelegation;
 using InTicket.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InTicket.Api.Controllers;
@@ -48,7 +48,21 @@ public class ProfileController : ControllerBase
             return BadRequest("National id is wrong or you already delegated someone.");
         return CreatedAtRoute("GetMyDelegation" ,
             new {}
-            , result);
+            , $"Your delegation to user with national id {delegateNationalId} has been created.");
     }
-    
+
+    [HttpDelete("delegation/{id}")]
+    [Authorize]
+    public async Task<IActionResult> DeleteDelegation(Guid id)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var deleteDelegationRequest = new DeleteDelegationRequest()
+        {
+            DelegatorId =  userId,
+            DelegationId = id
+        };
+        var result = await _mediator.Send(deleteDelegationRequest);
+        if(! result) return BadRequest("Delegation not found.");
+        return Ok();
+    }
 }

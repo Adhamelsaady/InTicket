@@ -17,7 +17,7 @@ public class GetMyDelegationsRequestHandler : IRequestHandler<GetMyDelegationsRe
         var result = await _delegationsRepository.GetDelegationAsync(request.currentUserId);
         if (result == null)
             return null;
-        var response = new GetMyDelegationsResponse() { NationalId = result.DelegateNationalId };
+        var response = new GetMyDelegationsResponse() { NationalId = result.DelegateNationalId , CreatedAt = result.CreatedAt };
         return response;
     }
 }

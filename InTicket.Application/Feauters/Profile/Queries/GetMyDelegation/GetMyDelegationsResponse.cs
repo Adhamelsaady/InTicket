@@ -3,4 +3,5 @@
 public class GetMyDelegationsResponse
 {
     public string NationalId { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
