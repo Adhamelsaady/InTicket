@@ -1,4 +1,5 @@
 ﻿using InTicket.Application.Contracts.Presistance;
+using InTicket.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace InTicket.Persistence.Repositories;
@@ -12,6 +13,10 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     }
     
     public async Task<T> GetByIdAsync(Guid id)
+    {
+        return await _dbContext.Set<T>().FindAsync(id);
+    }
+    public async Task<T> GetByIdAsync(string id)
     {
         return await _dbContext.Set<T>().FindAsync(id);
     }
@@ -39,7 +44,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         _dbContext.Set<T>().Remove(entity);
         await _dbContext.SaveChangesAsync();
     }
-
+    public async Task<ApplicationUser?> GetByNationalIdAsync(string nationalId)
+    {
+        return await _dbContext.Users
+            .FirstOrDefaultAsync(u => u.NationalId == nationalId);
+    }
     public async Task<int> SaveChangesAsync()
     {
         return await _dbContext.SaveChangesAsync();

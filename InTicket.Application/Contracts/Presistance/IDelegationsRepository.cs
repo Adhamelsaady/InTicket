@@ -4,5 +4,7 @@ namespace InTicket.Application.Contracts.Presistance;
 
 public interface IDelegationsRepository
 {
-    Task<Delegation> GetDelegation(string delegatorId);
+    Task<Delegation> GetDelegationAsync(string delegatorId);
+    Task <bool> HasDelegationAsync(string delegatorId);
+    Task<Delegation> AddAsync(Delegation delegation);
 }

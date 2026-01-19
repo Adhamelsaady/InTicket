@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using InTicket.Application.Feauters.Profile.Commands.AddDelegate;
 using InTicket.Application.Feauters.Profile.Queries.GetMyDelegation;
 using InTicket.Domain;
 using MediatR;
@@ -18,7 +19,7 @@ public class ProfileController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("delegation")]
+    [HttpGet("delegation" , Name =  "GetMyDelegation")]
     [Authorize]
     public async Task<IActionResult> GetMyDelegation()
     {
@@ -32,11 +33,22 @@ public class ProfileController : ControllerBase
         return Ok(myDelegation);
     }
 
-    // [HttpPost("delegation")]
-    // [Authorize]
-    // public async Task<IActionResult> Delegate(string delegationNationalId)
-    // {
-    //     
-    // }
-    //
+    [HttpPost("delegation")]
+    [Authorize]
+    public async Task<IActionResult> Delegate([FromBody]string delegateNationalId)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var addDelegateRequest = new AddDelegateRequest()
+        {
+            DelegatorId = userId,
+            DelegateNationalId =  delegateNationalId
+        };
+        var result = await _mediator.Send(addDelegateRequest);
+        if(result == false)
+            return BadRequest("National id is wrong or you already delegated someone.");
+        return CreatedAtRoute("GetMyDelegation" ,
+            new {}
+            , result);
+    }
+    
 }

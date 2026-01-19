@@ -14,7 +14,7 @@ public class GetMyDelegationsRequestHandler : IRequestHandler<GetMyDelegationsRe
 
     public async Task<GetMyDelegationsResponse> Handle(GetMyDelegationsRequest request, CancellationToken cancellationToken)
     {
-        var result = await _delegationsRepository.GetDelegation(request.currentUserId);
+        var result = await _delegationsRepository.GetDelegationAsync(request.currentUserId);
         if (result == null)
             return null;
         var response = new GetMyDelegationsResponse() { NationalId = result.DelegateNationalId };
