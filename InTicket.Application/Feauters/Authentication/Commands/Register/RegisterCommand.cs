@@ -35,5 +35,4 @@ public class RegisterCommand : IRequest<AuthenticationResponse>
     [Required]
     public Guid FavoriteTeamId { get; set; }
     
-    
 }
