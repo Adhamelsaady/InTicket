@@ -31,4 +31,9 @@ public class RegisterCommand : IRequest<AuthenticationResponse>
     [Required(ErrorMessage = "National Id is required")]
     [Length(14 , 14 , ErrorMessage = "Enter a valid National Id") ]
     public string NationalId { get; set; } = string.Empty;
+    
+    [Required]
+    public Guid FavoriteTeamId { get; set; }
+    
+    
 }
