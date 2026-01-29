@@ -17,5 +17,7 @@ public class Match : BaseEvent
     public int StadiumCapacity { get; set; }
     
     public DateTime? FanPriorityBookingStart { get; set; }  
-    public DateTime? GeneralBookingStart { get; set; }        
+    public DateTime? GeneralBookingStart { get; set; }       
+    
+    public ICollection <MatchTicket> MatchTickets { get; set; } = new List<MatchTicket>();
 }

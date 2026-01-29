@@ -27,6 +27,8 @@ public class InTicketDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.ConfigureConcerts();
         modelBuilder.ConfigureDelegations();
         modelBuilder.ConfigureTeams();
-   
+        modelBuilder.ConfigureTickets();
+        modelBuilder.ConfigureConcertTickets();
+        modelBuilder.ConfigureMatchTickets();
     }
 }
