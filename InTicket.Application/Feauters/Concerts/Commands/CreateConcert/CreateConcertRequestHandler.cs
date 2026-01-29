@@ -40,6 +40,7 @@ public class CreateConcertRequestHandler : IRequestHandler<CreateConcertRequest,
                     TicketClass = @class,
                     ConcertId = concertToAdd.Id
                 };
+                await _concertTicketsRepository.AddAsync(tikcetToAdd);
             }
         }
 
