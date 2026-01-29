@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using InTicket.Application.Feauters.Matches.Commands.CreateMatch;
+using InTicket.Domain;
 using MediatR;
 
 namespace InTicket.Application.Feauters.Concerts.Commands.CreateConcert;
@@ -24,15 +26,6 @@ public class CreateConcertRequest : IRequest<CreateConcertRequestResponse>
     public string Location { get; set; } = string.Empty;
     
     [Required]
-    public int Price { get; set; }
-    
-    [Required]
-    public int TotalCapacity { get; set; }
-    
-    [Required]
-    public int AvailableTickets { get; set; }
-    
-    [Required]
     [MaxLength(200)]
     public string Artist { get; set; }  
     
@@ -45,6 +38,8 @@ public class CreateConcertRequest : IRequest<CreateConcertRequestResponse>
    
     [Required]
     public int? MinimumAge { get; set; }
-    
 
+    [Required]
+    public Dictionary<ConcertTicketClass, TicketData> TicketsDistribution  { get; set; }
+        = new Dictionary<ConcertTicketClass, TicketData>();
 }
