@@ -15,9 +15,24 @@ public class ConcertsRepository : IConcertsRepository
         _dbContext = dbContext;
     }
 
-    public async Task<PagedResult<Concert>> GetAllConcerts(ConcertResourceParameters concertResourceParameters)
+    public async Task<Concert> GetConcertByIdAsync(Guid id , bool IsRequestedByAdmin)
+    {
+        var concert = await _dbContext.Concerts.FirstOrDefaultAsync(c => c.Id == id);
+        if (!IsRequestedByAdmin)
+        {
+            if (!concert.IsActive)
+                return null;
+        }
+        return concert;
+    }
+    
+    public async Task<PagedResult<Concert>> GetAllConcertsAsync(ConcertResourceParameters concertResourceParameters , bool IsRequestedByAdmin)
     {
         var query = _dbContext.Concerts.AsQueryable();
+        if (!IsRequestedByAdmin)
+        {
+            query = query.Where(c => c.IsActive);
+        }
         if (concertResourceParameters == null)
         {
             throw new ArgumentNullException(nameof(concertResourceParameters));

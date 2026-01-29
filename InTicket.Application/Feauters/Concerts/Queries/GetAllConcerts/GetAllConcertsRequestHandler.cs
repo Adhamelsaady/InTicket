@@ -20,7 +20,7 @@ public class GetAllConcertsRequestHandler : IRequestHandler<GetAllConcertsReques
 
     public async Task<PagedResult<GetConcertResponse>> Handle(GetAllConcertsRequest request,CancellationToken cancellationToken)
     {
-        var concerts = await _concertsRepository.GetAllConcerts(request.ConcertResourceParameters);
+        var concerts = await _concertsRepository.GetAllConcertsAsync(request.ConcertResourceParameters , request.IsRequestedByAdmin);
         var concertsToReturn = _mapper.Map<List<GetConcertResponse>>(concerts.Items);
         var result = new PagedResult<GetConcertResponse>();
         result.TotalCount = concerts.TotalCount;

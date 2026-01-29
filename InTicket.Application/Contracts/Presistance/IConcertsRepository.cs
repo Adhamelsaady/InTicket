@@ -6,5 +6,6 @@ namespace InTicket.Application.Contracts.Presistance;
 
 public interface IConcertsRepository
 {
-    Task<PagedResult<Concert>> GetAllConcerts(ConcertResourceParameters concertResourceParameters);
+    Task <Concert> GetConcertByIdAsync(Guid id ,  bool isRequestedByAdmin);
+    Task<PagedResult<Concert>> GetAllConcertsAsync(ConcertResourceParameters concertResourceParameters , bool isRequestedByAdmin);
 }

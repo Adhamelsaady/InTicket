@@ -8,10 +8,10 @@ namespace InTicket.Application.Feauters.Concerts.Queries.GetConcertById;
 
 public class GetConcertByIdRequestHandler : IRequestHandler<GetConcertByIdRequest , GetConcertResponse>
 {
-    private readonly IBaseRepository<Concert> _concertRepository;
+    private readonly IConcertsRepository _concertRepository;
     private readonly IMapper _mapper;
 
-    public GetConcertByIdRequestHandler(IBaseRepository<Concert> concertRepository, IMapper mapper)
+    public GetConcertByIdRequestHandler(IConcertsRepository concertRepository, IMapper mapper)
     {
         _concertRepository = concertRepository;
         _mapper = mapper;
@@ -19,7 +19,7 @@ public class GetConcertByIdRequestHandler : IRequestHandler<GetConcertByIdReques
     
     public async Task<GetConcertResponse> Handle(GetConcertByIdRequest request, CancellationToken cancellationToken)
     {
-        var concertEntity = await _concertRepository.GetByIdAsync(request.Id);
+        var concertEntity = await _concertRepository.GetConcertByIdAsync(request.Id , request.IsRequestedByAdmin);
         return _mapper.Map<GetConcertResponse>(concertEntity);
     }
 }

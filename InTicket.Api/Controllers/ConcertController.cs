@@ -1,4 +1,5 @@
-﻿using InTicket.Application.Feauters.Concerts.Commands.CreateConcert;
+﻿using InTicket.Application.Feauters.Concerts.ActivateConcert;
+using InTicket.Application.Feauters.Concerts.Commands.CreateConcert;
 using InTicket.Application.Feauters.Concerts.Commands.DeleteConcert;
 using InTicket.Application.Feauters.Concerts.Queries.GetAllConcerts;
 using InTicket.Application.Feauters.Concerts.Queries.GetConcertById;
@@ -20,8 +21,9 @@ public class ConcertController : ControllerBase
 
     [HttpGet(Name = "GetAllConcerts")][AllowAnonymous]
     public async Task<IActionResult> GetAllConcerts([FromQuery] ConcertResourceParameters concertResourceParameters)
-    {
-        var getAllConcertsRequest = new GetAllConcertsRequest() {ConcertResourceParameters = concertResourceParameters};
+    { 
+        bool isAdmin = User.IsInRole("Admin");
+        var getAllConcertsRequest = new GetAllConcertsRequest() {ConcertResourceParameters = concertResourceParameters ,  IsRequestedByAdmin = isAdmin};
         var result = await  _mediator.Send(getAllConcertsRequest);
         return Ok(result);
     }
@@ -29,7 +31,8 @@ public class ConcertController : ControllerBase
     [HttpGet("{id}" , Name = "GetConcertById")]
     public async Task<IActionResult> GetConcertById(Guid id)
     {
-        var getConcertByIdRequest = new GetConcertByIdRequest() { Id = id };
+        bool isAdmin = User.IsInRole("Admin");
+        var getConcertByIdRequest = new GetConcertByIdRequest() { Id = id ,  IsRequestedByAdmin = isAdmin };
         var concert = await _mediator.Send(getConcertByIdRequest);
         return Ok(concert);
     }
@@ -50,6 +53,17 @@ public class ConcertController : ControllerBase
             result);
     }
 
+    [HttpPut("{id}")]
+    [Authorize(Roles = "Admin")]
+
+    public async Task<IActionResult> ActivateConcert([FromRoute] Guid id)
+    {
+        var activateConcertRequest = new ActivateConcertRequest() { Id = id };
+        var result = await _mediator.Send(activateConcertRequest);
+        if (!result) return BadRequest();
+        return Ok(new { message = "Concert activated successfully", matchId = id });
+    }
+    
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteConcert(Guid id)

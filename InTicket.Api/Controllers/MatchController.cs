@@ -60,9 +60,9 @@ public class MatchController : ControllerBase
             result);
     }
 
-    [HttpPut("/{id}")]
+    [HttpPut("{id}")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> ActivateMatchBooking(Guid id)
+    public async Task<IActionResult> ActivateMatchBooking([FromRoute] Guid id)
     {
         var activateMatchRequest = new ActivateMatchRequest() { Id = id };
         var result = await _mediator.Send(activateMatchRequest);

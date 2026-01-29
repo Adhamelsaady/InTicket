@@ -15,7 +15,8 @@ public class ActivateMatchRequestHandler : IRequestHandler<ActivateMatchRequest 
     public async Task<bool> Handle(ActivateMatchRequest request, CancellationToken cancellationToken)
     {
         var match = await _matchRepository.GetByIdAsync(request.Id);
-        if (match == null) return false;
+        if (match == null) 
+            return false;
         if(!match.IsActive)
         {
             match.IsActive = true;

@@ -7,7 +7,8 @@ public class Concert : BaseEvent
     
     public int? DurationMinutes { get; set; }
     public int? MinimumAge { get; set; }
-    
+    public DateTime BookingStartDate { get; set; }
+
     public ICollection <ConcertTicket>  ConcertTickets { get; set; } = new List<ConcertTicket>();
      
 }
