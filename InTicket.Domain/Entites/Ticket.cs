@@ -3,7 +3,7 @@
 public class Ticket
 {
     public Guid TicketId { get; set; } 
-    public string? HolderId { get; set; } = string.Empty;
+    public string? HolderId { get; set; }
     public ApplicationUser? Holder { get; set; }
     public int Price { get; set; }
     public TicketStatus Status { get; set; } =  TicketStatus.Open;
