@@ -13,17 +13,23 @@ public class MatchRepository :  BaseRepository<Match>, IMatchRepository
     {
     }
 
-    public async Task<Match> GetMatchByIdAsync(Guid matchId)
+    public async Task<Match> GetMatchByIdAsync(Guid matchId , bool  isRequestedByAdmin)
     {
         var match = await _dbContext.Matches.FindAsync(matchId);
+        if (!isRequestedByAdmin)
+        {
+            if (!match.IsActive)
+                return null;
+        }
         return match;
     }
-    public async Task<PagedResult<Match>> GetAllMatchesAsync(MatchResourceParameters matchResourceParameters)
+    public async Task<PagedResult<Match>> GetAllMatchesAsync(MatchResourceParameters matchResourceParameters , bool isRequestedByAdmin)
     {
-        var query = _dbContext.Matches
-            .Include(m => m.HomeTeam)
-            .Include(m => m.AwayTeam)
-            .AsQueryable();
+        var query = _dbContext.Matches.AsQueryable();
+        if(! isRequestedByAdmin)
+            query = query.Where(m => m.IsActive == true);
+        query = query.Include(m => m.HomeTeam)
+            .Include(m => m.AwayTeam).AsQueryable();
         if (matchResourceParameters == null)
         {
             throw new ArgumentNullException(nameof(matchResourceParameters));

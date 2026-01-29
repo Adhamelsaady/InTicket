@@ -19,8 +19,8 @@ public class GetMatchByIdRequestHandler : IRequestHandler<GetMatchByIdRequest , 
     
     public async Task<GetMatchResponse> Handle(GetMatchByIdRequest request, CancellationToken cancellationToken)
     {
-        var matchEntity = await _matchRepository.GetMatchByIdAsync(request.Id);
-        if (matchEntity == null)
+        var matchEntity = await _matchRepository.GetMatchByIdAsync(request.Id , request.IsRequestedByAdmin);
+        if (matchEntity == null || !matchEntity.IsActive)
         {
             return null;
         }

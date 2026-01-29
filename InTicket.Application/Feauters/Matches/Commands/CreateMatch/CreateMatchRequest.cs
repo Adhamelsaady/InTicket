@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using InTicket.Domain;
 using MediatR;
 
 namespace InTicket.Application.Feauters.Matches.Commands.CreateMatch;
@@ -34,9 +35,8 @@ public class CreateMatchRequest : IRequest<CreateMatchRequestResponse>
     
     [Required]
     public Guid HomeTeamId { get; set; }
-    
-    [Required]
-    public Guid AwayTeamId { get; set; }
+
+    [Required] public Guid AwayTeamId { get; set; } 
     
     [Required]
     [MaxLength(100)]
@@ -56,9 +56,10 @@ public class CreateMatchRequest : IRequest<CreateMatchRequestResponse>
     [Required]
     public int StadiumCapacity { get; set; }
     
-    [Required]
-    public DateTime? FanPriorityBookingStart { get; set; }  
+    [Required] 
+    public DateTime GeneralBookingStart { get; set; }
     
-    [Required]
-    public DateTime? GeneralBookingStart { get; set; }        
+        [Required]
+        public Dictionary<MatchTicketClass , TicketData> TicketsDistribution { get; set; } 
+            = new Dictionary<MatchTicketClass , TicketData> ();
 }

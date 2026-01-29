@@ -8,4 +8,6 @@ namespace InTicket.Application.Feauters.Matchs.Queries.GetAllMatches;
 public class GetAllMatchesRequest : IRequest<PagedResult<GetMatchResponse>>
 {
     public MatchResourceParameters MatchResourceParameters { get; set; }
+    public bool IsRequestedByAdmin { get; set; }
+
 }

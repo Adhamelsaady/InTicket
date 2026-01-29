@@ -19,7 +19,7 @@ public class GetAllMatchesRequestHandler : IRequestHandler<GetAllMatchesRequest,
 
     public async Task<PagedResult<GetMatchResponse>> Handle(GetAllMatchesRequest request, CancellationToken cancellationToken)
     {
-        var matches = await _matchRepository.GetAllMatchesAsync(request.MatchResourceParameters);
+        var matches = await _matchRepository.GetAllMatchesAsync(request.MatchResourceParameters , request.IsRequestedByAdmin);
         var matchesToReturn = _mapper.Map<List<GetMatchResponse>>(matches.Items);
         var result = new PagedResult<GetMatchResponse>();
         result.TotalCount = matches.TotalCount;

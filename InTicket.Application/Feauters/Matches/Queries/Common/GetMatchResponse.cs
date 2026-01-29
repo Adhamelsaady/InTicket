@@ -19,4 +19,5 @@ public class GetMatchResponse
     
     public string StadiumName { get; set; } = string.Empty;
     public int StadiumCapacity { get; set; }
+    public bool IsActive { get; set; }
 }

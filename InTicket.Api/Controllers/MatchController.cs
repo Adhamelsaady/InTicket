@@ -1,4 +1,5 @@
-﻿using InTicket.Application.Feauters.Matches.Commands.CreateMatch;
+﻿using InTicket.Application.Feauters.Matches.Commands.ActivateMatch;
+using InTicket.Application.Feauters.Matches.Commands.CreateMatch;
 using InTicket.Application.Feauters.Matches.Commands.DeleteMatch;
 using InTicket.Application.Feauters.Matchs.Queries;
 using InTicket.Application.Feauters.Matchs.Queries.GetAllMatches;
@@ -24,7 +25,8 @@ public class MatchController : ControllerBase
     [AllowAnonymous]
     public async Task<IActionResult> GetMatchById(Guid id)
     {
-        var getMatchByIdRequest = new GetMatchByIdRequest() { Id = id };
+        bool isAdmin = User.IsInRole("Admin");
+        var getMatchByIdRequest = new GetMatchByIdRequest() { Id = id , IsRequestedByAdmin = isAdmin };
         var result = await _mediator.Send(getMatchByIdRequest);
         if (result == null)
         {
@@ -36,7 +38,8 @@ public class MatchController : ControllerBase
     [HttpGet][AllowAnonymous]
     public async Task<IActionResult> GetAllMatches([FromQuery] MatchResourceParameters matchResourceParameters)
     {
-        var getAllMatchesRequest =  new GetAllMatchesRequest() { MatchResourceParameters = matchResourceParameters };
+        bool isAdmin = User.IsInRole("Admin");
+        var getAllMatchesRequest =  new GetAllMatchesRequest() { MatchResourceParameters = matchResourceParameters , IsRequestedByAdmin = isAdmin};
         var result = await _mediator.Send(getAllMatchesRequest);
         return Ok(result);
     }
@@ -57,6 +60,16 @@ public class MatchController : ControllerBase
             result);
     }
 
+    [HttpPut("/{id}")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> ActivateMatchBooking(Guid id)
+    {
+        var activateMatchRequest = new ActivateMatchRequest() { Id = id };
+        var result = await _mediator.Send(activateMatchRequest);
+        if(! result) return BadRequest();
+        return Ok(new { message = "Match activated successfully", matchId = id });
+    }
+    
     [HttpDelete("{id}")]
     [Authorize(Roles = "Admin")]  
     public async Task<IActionResult> DeleteMatch(Guid id)

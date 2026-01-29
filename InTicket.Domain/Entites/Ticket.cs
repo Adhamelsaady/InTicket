@@ -5,7 +5,6 @@ public class Ticket
     public Guid TicketId { get; set; } 
     public string? HolderId { get; set; } = string.Empty;
     public ApplicationUser? Holder { get; set; }
-    public Guid TicketClassId { get; set; }
     public int Price { get; set; }
     public TicketStatus Status { get; set; } =  TicketStatus.Open;
     
