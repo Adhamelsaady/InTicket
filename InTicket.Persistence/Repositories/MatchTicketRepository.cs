@@ -1,4 +1,5 @@
 ﻿using InTicket.Application.Contracts.Presistance;
+using InTicket.Domain;
 using Microsoft.EntityFrameworkCore;
 
 namespace InTicket.Persistence.Repositories;
@@ -18,5 +19,14 @@ public class MatchTicketRepository : IMatchTicketRepository
         bool exist = await tickets.FirstOrDefaultAsync(t => t.MatchId == matchId && t.HolderId == userId) != null;
         return exist;
     }
-    
+
+    public async Task<MatchTicket> GetRandomTicketAsync(MatchTicketClass matchTicketClass , Guid matchId , string UserId)
+    {
+        var tickets = _dbContext.MatchTickets.AsQueryable();
+        var ticket = await tickets.FirstOrDefaultAsync(t => t.MatchId == matchId &&
+                                                            (t.Status == TicketStatus.Open ||
+                                                             t.HeldExpiresAt < DateTime.Now));
+        ticket.HolderId = UserId;
+        return ticket;
+    }
 }

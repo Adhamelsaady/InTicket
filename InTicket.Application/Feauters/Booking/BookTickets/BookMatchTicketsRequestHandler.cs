@@ -26,15 +26,22 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
     
     public async Task<BookMatchTicketsResponse> Handle(BookMatchTicketsRequest request, CancellationToken cancellationToken)
     {
-        // home team id
-        // away team id
         var match =  await _matchRepository.GetMatchByIdAsync(request.MatchId, false);
         if (match == null)
             return new BookMatchTicketsResponse() {IsSuccess = false};
         if(! await ValidateBooking(request , match) || ! await AnyUserHasBooked(request))  // this validates that the given request is valid in terms of user
             return new BookMatchTicketsResponse() {IsSuccess = false};
+        var tickets = await HoldTheTickets(request);
+        if(tickets.Contains(null)) 
+            return new BookMatchTicketsResponse() {IsSuccess = false};
         
-        return new BookMatchTicketsResponse();
+        return new BookMatchTicketsResponse()
+        {
+            IsSuccess = true,
+            PaymentCode = Guid.NewGuid(),
+            TotalPrice =  tickets.Sum(t => t.Price),
+            TotalTickets =  tickets.Count,
+        };
     }
 
     private async Task<bool> ValidateBooking(BookMatchTicketsRequest request , Match match)
@@ -73,5 +80,15 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
 
         return false;
     }
-    
+
+    private async Task<IList<Ticket>> HoldTheTickets(BookMatchTicketsRequest request)
+    {
+        List<Ticket> result = new List<Ticket>(); 
+        foreach (var ticketForBooking in request.MatchTicketForBookingDtos)
+        {
+            var ticketToAdd = await _matchTicketRepository.GetRandomTicketAsync(ticketForBooking.Class , request.MatchId , request.UserId);
+            result.Add(ticketToAdd);
+        }
+        return result;
+    }
 }
