@@ -31,4 +31,11 @@ public class DelegationsRepository  : IDelegationsRepository
         await  _dbContext.SaveChangesAsync();
         return delegation;
     }
+
+    public async Task<bool> IsDelegatedAsync(string delegatorId , string @delegate)
+    {
+        var query = _dbContext.Delegations.AsQueryable();
+        var delegation = await query.FirstOrDefaultAsync(d => d.DelegateId == @delegate && d.DelegatorId == delegatorId);
+        return delegation != null;
+    }
 }
