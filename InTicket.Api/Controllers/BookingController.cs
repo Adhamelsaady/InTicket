@@ -36,6 +36,8 @@ public class BookingController : ControllerBase
             return BadRequest("You can book only up to 5 tickets.");
 
         var bookingTicketsResponse = await _mediator.Send(bookTicketsRequest);
+        if(bookingTicketsResponse.IsSuccess == false)
+            return BadRequest("Failed to book tickets.");
         return Ok(bookingTicketsResponse);
     }
 }
