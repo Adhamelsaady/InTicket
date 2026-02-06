@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InTicket.Persistence.Migrations
 {
     [DbContext(typeof(InTicketDbContext))]
-    [Migration("20260203184905_add_dbset_for_tickets")]
-    partial class add_dbset_for_tickets
+    [Migration("20260206181538_added_payment_tabel")]
+    partial class added_payment_tabel
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -195,6 +195,39 @@ namespace InTicket.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Delegations", (string)null);
+                });
+
+            modelBuilder.Entity("InTicket.Domain.Payments", b =>
+                {
+                    b.Property<Guid>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("Done")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("PaymentIntentId")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.PrimitiveCollection<string>("TicketIds")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("InTicket.Domain.Team", b =>
@@ -926,6 +959,17 @@ namespace InTicket.Persistence.Migrations
                     b.Navigation("Delegator");
                 });
 
+            modelBuilder.Entity("InTicket.Domain.Payments", b =>
+                {
+                    b.HasOne("InTicket.Domain.ApplicationUser", "User")
+                        .WithMany("Payments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("InTicket.Domain.Ticket", b =>
                 {
                     b.HasOne("InTicket.Domain.ApplicationUser", "Holder")
@@ -1033,6 +1077,8 @@ namespace InTicket.Persistence.Migrations
                     b.Navigation("DelegationGiven");
 
                     b.Navigation("DelegationsReceived");
+
+                    b.Navigation("Payments");
 
                     b.Navigation("Tickets");
                 });
