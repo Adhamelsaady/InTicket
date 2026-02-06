@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InTicket.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c2d7eece9965dc1af7c808048d4ec33dbc3b9a57")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+84c7b9203818d912abcb172fbabc768e73d9de37")]
 [assembly: System.Reflection.AssemblyProductAttribute("InTicket.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InTicket.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
