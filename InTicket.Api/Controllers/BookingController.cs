@@ -61,10 +61,41 @@ public class BookingController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
-    // [HttpPost("webhook")]
-    // [AllowAnonymous]
-    // public async Task<IActionResult> StripeWebhook()
-    // {
-    //     
-    // }
+    
+    [HttpPost("webhook")]
+// Do NOT use [Authorize] here; Stripe calls this anonymously
+    public async Task<IActionResult> StripeWebhook()
+    {
+        // 1. Read the raw body string
+        var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
+    
+        try
+        {
+            // 2. Verify the signature
+            var stripeSignature = Request.Headers["Stripe-Signature"];
+            var webhookSecret = _configuration["Stripe:WebhookSecret"]; // Define this in appsettings.json
+
+            var stripeEvent = EventUtility.ConstructEvent(
+                json,
+                stripeSignature,
+                webhookSecret
+            );
+
+            // 3. Handle the event
+            // Use Stripe.Events to avoid ambiguity
+            if (stripeEvent.Type == "checkout.session.completed")
+            {
+                var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
+    
+                // Now you can handle the successful payment
+                Console.WriteLine($"Payment completed for session: {session.Id}");
+            }
+
+            return Ok(); // Always return 200 OK to Stripe
+        }
+        catch (StripeException e)
+        {
+            return BadRequest();
+        }
+    }
 }

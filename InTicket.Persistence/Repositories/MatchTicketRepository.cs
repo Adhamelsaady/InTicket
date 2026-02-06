@@ -16,8 +16,10 @@ public class MatchTicketRepository : IMatchTicketRepository
     public async Task<bool> UserHasTicketForMatchAsync(string userId, Guid matchId)
     {
         var tickets = _dbContext.MatchTickets.AsQueryable();
-        bool exist = await tickets.FirstOrDefaultAsync(t => t.MatchId == matchId && t.HolderId == userId) != null;
-        return exist;
+        var ticket = await tickets.FirstOrDefaultAsync(t => t.MatchId == matchId && t.HolderId == userId);
+        if(ticket == null) return false;
+        if(ticket.HeldExpiresAt < DateTime.UtcNow) return false;
+        return true;
     }
 
     public async Task<MatchTicket> GetRandomTicketAsync(MatchTicketClass matchTicketClass , Guid matchId , string UserId)
@@ -25,7 +27,7 @@ public class MatchTicketRepository : IMatchTicketRepository
         var tickets = _dbContext.MatchTickets.AsQueryable();
         var ticket = await tickets.FirstOrDefaultAsync(t => t.MatchId == matchId &&
                                                             (t.Status == TicketStatus.Open ||
-                                                             t.HeldExpiresAt < DateTime.Now));
+                                                             t.HeldExpiresAt < DateTime.UtcNow));
         ticket.HolderId = UserId;
         return ticket;
     }

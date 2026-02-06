@@ -85,6 +85,8 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
 
             if (request.UserId != booksFor && !await _delegationsRepository.IsDelegatedAsync(booksFor, request.UserId))
             {
+                Console.WriteLine(await _delegationsRepository.IsDelegatedAsync(booksFor, request.UserId));
+                Console.WriteLine("Delegation Problem");
                 return false;
             }
 
@@ -92,12 +94,14 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
             var user = await _userManager.FindByIdAsync(booksFor);
             if (teamId != user.FavoriteTeamId && match.GeneralBookingStart > DateTime.Now)
             {
+                Console.WriteLine("General booking problem");
                 return false;
             }
 
             BookingForIds.Add(booksFor);
         }
 
+        Console.WriteLine("Validation Working");
         return true;
     }
 
@@ -106,7 +110,10 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         foreach (var ticket in request.MatchTicketForBookingDtos)
         {
             if (await _matchTicketRepository.UserHasTicketForMatchAsync(ticket.BookingForUserId, request.MatchId))
+            {
+                Console.WriteLine("Ticket Has Booked for " + ticket.BookingForUserId);
                 return true;
+            }
         }
 
         return false;

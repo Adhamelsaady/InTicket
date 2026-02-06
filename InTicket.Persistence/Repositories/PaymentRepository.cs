@@ -20,7 +20,7 @@ public class PaymentRepository : IPaymentRepository
     }
     public async Task<Payments> GetPaymentByIntentAsync(string paymentIntentId)
     {
-        var payment = await _dbContext.Payments.FirstOrDefaultAsync(p => p.StripePaymentIntentId == paymentIntentId);
+        var payment = await _dbContext.Payments.FirstOrDefaultAsync(p => p.PaymentIntentId == paymentIntentId);
         return payment;
     }
 }

@@ -52,7 +52,7 @@ public class StripePaymentService : IStripePaymentServices
         var service = new PaymentIntentService();
         var paymentIntent = await service.CreateAsync(options);
 
-        payment.StripePaymentIntentId = paymentIntent.Id;
+        payment.PaymentIntentId = paymentIntent.Id;
         payment.Done = true;
 
         return new CompletePaymentResponse
