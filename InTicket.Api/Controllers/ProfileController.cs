@@ -28,7 +28,7 @@ public class ProfileController : ControllerBase
         var myDelegation = await _mediator.Send(getDelegationRequest);
         if (myDelegation == null)
         {
-            return BadRequest("You haven't delegate anyone yet.");
+            return Ok("You haven't delegate anyone yet.");
         }
         return Ok(myDelegation);
     }

@@ -2,6 +2,7 @@
 using InTicket.Application.Feauters.Booking.BookTickets;
 using InTicket.Domain.Dtos;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InTicket.Api.Controllers;
@@ -17,12 +18,15 @@ public class BookingController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost ("booktickets")]
-    public async Task<IActionResult> BookTickets(List <MatchTicketForBookingDto> matchTicketForBookingDtos , Guid matchId)
+    [Authorize]
+    [HttpPost("{matchId:guid}/book")]
+    public async Task<IActionResult> BookTickets(List <MatchTicketForBookingDto> tickets , Guid matchId)
     {
+        if (tickets == null || !tickets.Any())
+            return BadRequest("No tickets provided.");
         var bookTicketsRequest = new BookMatchTicketsRequest()
         {
-            MatchTicketForBookingDtos =  matchTicketForBookingDtos,
+            MatchTicketForBookingDtos =  tickets,
             UserId =  User.FindFirstValue(ClaimTypes.NameIdentifier),
             MatchId = matchId,
             BookingDate =  DateTime.Now

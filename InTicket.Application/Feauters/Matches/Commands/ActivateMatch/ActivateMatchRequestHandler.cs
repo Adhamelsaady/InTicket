@@ -21,9 +21,10 @@ public class ActivateMatchRequestHandler : IRequestHandler<ActivateMatchRequest 
         {
             match.IsActive = true;
             match.FanPriorityBookingStart = DateTime.Now.AddMinutes(1);
+            match.GeneralBookingStart = match.EventDate.AddHours(-15);
         }
         
-        _matchRepository.SaveChangesAsync();
+        await _matchRepository.SaveChangesAsync();
         return true;
     }
 }

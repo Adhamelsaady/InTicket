@@ -12,16 +12,18 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
     private readonly IMatchRepository _matchRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMatchTicketRepository _matchTicketRepository;
-    
+    private readonly IBaseRepository <Payments> _paymentRepository;
     public BookMatchTicketsRequestHandler(IDelegationsRepository delegationsRepository , 
         IMatchRepository matchRepository ,
         UserManager<ApplicationUser> userManager , 
-        IMatchTicketRepository matchTicketRepository)
+        IMatchTicketRepository matchTicketRepository , 
+        IBaseRepository <Payments> paymentRepository)
     {
         _delegationsRepository = delegationsRepository;
         _matchRepository = matchRepository;
         _userManager = userManager;
         _matchTicketRepository = matchTicketRepository;
+        _paymentRepository = paymentRepository;
     }
     
     public async Task<BookMatchTicketsResponse> Handle(BookMatchTicketsRequest request, CancellationToken cancellationToken)
@@ -34,14 +36,25 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         var tickets = await HoldTheTickets(request);
         if(tickets.Contains(null)) 
             return new BookMatchTicketsResponse() {IsSuccess = false};
-            
+
+        var payment = new Payments()
+        {
+            PaymentId = Guid.NewGuid(),
+            UserId = request.UserId,
+            Price = tickets.Sum(t => t.Price),
+            ExpirationDate = DateTime.Now.AddHours(1),
+            TicketIds =  tickets.Select(t => t.TicketId).ToList(),
+            Done = false
+        };
+        await _paymentRepository.AddAsync(payment);
+        await _paymentRepository.SaveChangesAsync();
         return new BookMatchTicketsResponse()
         {
             IsSuccess = true,
-            PaymentCode = Guid.NewGuid(),
-            TotalPrice =  tickets.Sum(t => t.Price),
+            PaymentCode = payment.PaymentId,
+            TotalPrice =  payment.Price,
             TotalTickets =  tickets.Count,
-            ExpirationDate = DateTime.Now.AddHours(1)
+            ExpirationDate = payment.ExpirationDate
         };
     }
 
