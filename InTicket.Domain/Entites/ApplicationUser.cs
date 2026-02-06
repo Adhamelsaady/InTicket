@@ -24,4 +24,6 @@ public class ApplicationUser : IdentityUser
     public ICollection<Delegation>? DelegationsReceived { get; set; } = new List<Delegation>();
     
     public ICollection<Ticket>? Tickets { get; set; } = new List<Ticket>();
+    
+    public ICollection <Payments> ? Payments { get; set; } = new List<Payments>();
 }

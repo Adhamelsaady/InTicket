@@ -34,13 +34,14 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         var tickets = await HoldTheTickets(request);
         if(tickets.Contains(null)) 
             return new BookMatchTicketsResponse() {IsSuccess = false};
-        
+            
         return new BookMatchTicketsResponse()
         {
             IsSuccess = true,
             PaymentCode = Guid.NewGuid(),
             TotalPrice =  tickets.Sum(t => t.Price),
             TotalTickets =  tickets.Count,
+            ExpirationDate = DateTime.Now.AddHours(1)
         };
     }
 

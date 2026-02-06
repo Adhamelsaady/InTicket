@@ -29,5 +29,6 @@ public static class PersistenceServiceRegistration
         services.AddScoped<IMatchRepository, MatchRepository>();
         services.AddScoped<IConcertsRepository, ConcertsRepository>();
         services.AddScoped<IDelegationsRepository, DelegationsRepository>();
+        services.AddScoped<IMatchTicketRepository , MatchTicketRepository>();
     }
 }

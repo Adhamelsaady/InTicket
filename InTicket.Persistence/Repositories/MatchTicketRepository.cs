@@ -8,7 +8,7 @@ public class MatchTicketRepository : IMatchTicketRepository
 {
     private readonly InTicketDbContext _dbContext;
     
-    MatchTicketRepository (InTicketDbContext dbContext)
+    public MatchTicketRepository (InTicketDbContext dbContext)
     {
         _dbContext = dbContext;
     }

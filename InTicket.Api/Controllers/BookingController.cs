@@ -31,7 +31,7 @@ public class BookingController : ControllerBase
         if (list.Count > 5)
             return BadRequest("You can book only up to 5 tickets.");
 
-        var paymentCode = await _mediator.Send(bookTicketsRequest);
-        return Ok();
+        var bookingTicketsResponse = await _mediator.Send(bookTicketsRequest);
+        return Ok(bookingTicketsResponse);
     }
 }

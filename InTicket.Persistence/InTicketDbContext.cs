@@ -25,6 +25,8 @@ public class InTicketDbContext : IdentityDbContext<ApplicationUser>
     
     public DbSet<Ticket> Tickets { get; set; }
     
+    public DbSet<Payments> Payments { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -36,5 +38,6 @@ public class InTicketDbContext : IdentityDbContext<ApplicationUser>
         modelBuilder.ConfigureTickets();
         modelBuilder.ConfigureConcertTickets();
         modelBuilder.ConfigureMatchTickets();
+        modelBuilder.ConfigurePayments();
     }
 }
