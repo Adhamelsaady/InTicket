@@ -1871,7 +1871,9 @@
         "framework": ".NETCoreApp,Version=v9.0",
         "dependencies": {
           "InTicket.Application": "1.0.0",
-          "MimeKit": "4.14.0"
+          "InTicket.Persistence": "1.0.0",
+          "MimeKit": "4.14.0",
+          "Stripe.net": "50.3.0"
         },
         "compile": {
           "bin/placeholder/InTicket.Infrastructure.dll": {}

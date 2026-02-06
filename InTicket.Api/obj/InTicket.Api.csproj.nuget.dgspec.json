@@ -319,6 +319,9 @@
             "projectReferences": {
               "D:\\InTicket\\InTicket.Application\\InTicket.Application.csproj": {
                 "projectPath": "D:\\InTicket\\InTicket.Application\\InTicket.Application.csproj"
+              },
+              "D:\\InTicket\\InTicket.Persistence\\InTicket.Persistence.csproj": {
+                "projectPath": "D:\\InTicket\\InTicket.Persistence\\InTicket.Persistence.csproj"
               }
             }
           }
@@ -342,6 +345,10 @@
             "MimeKit": {
               "target": "Package",
               "version": "[4.14.0, )"
+            },
+            "Stripe.net": {
+              "target": "Package",
+              "version": "[50.3.0, )"
             }
           },
           "imports": [

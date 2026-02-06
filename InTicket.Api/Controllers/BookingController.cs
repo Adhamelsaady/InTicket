@@ -1,9 +1,11 @@
 ﻿using System.Security.Claims;
+using InTicket.Application.Contracts.Infrasructure;
 using InTicket.Application.Feauters.Booking.BookTickets;
 using InTicket.Domain.Dtos;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe;
 
 namespace InTicket.Api.Controllers;
 
@@ -11,11 +13,15 @@ namespace InTicket.Api.Controllers;
 [Route("api/Booking")]
 public class BookingController : ControllerBase
 {
+    private readonly IStripePaymentServices _paymentService;
     private readonly IMediator _mediator;
+    private readonly IConfiguration _configuration;
 
-    public BookingController(IMediator mediator)
+    public BookingController(IMediator mediator , IStripePaymentServices stripePaymentService , IConfiguration configuration)
     {
         _mediator = mediator;
+        _paymentService = stripePaymentService;
+        _configuration = configuration;
     }
 
     [Authorize]
@@ -40,4 +46,25 @@ public class BookingController : ControllerBase
             return BadRequest("Failed to book tickets.");
         return Ok(bookingTicketsResponse);
     }
+    
+    [Authorize]
+    [HttpPost("{matchId:guid}/complete_payment")]
+    public async Task<IActionResult> CompletePayment([FromBody] CompletePaymentRequest request)
+    {
+        try
+        {
+            var response = await _paymentService.InitiateStripePaymentAsync(request.PaymentCode);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+    // [HttpPost("webhook")]
+    // [AllowAnonymous]
+    // public async Task<IActionResult> StripeWebhook()
+    // {
+    //     
+    // }
 }
