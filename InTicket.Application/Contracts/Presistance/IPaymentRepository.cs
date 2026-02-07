@@ -6,4 +6,5 @@ public interface IPaymentRepository
 {
     Task<Payments> GetPaymentByPaymentCodeAsync(Guid paymentCode);
     Task<Payments> GetPaymentByIntentAsync(string paymentIntentId);
+    Task UpdateAsync(Payments payment);
 }

@@ -61,41 +61,53 @@ public class BookingController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
-    
     [HttpPost("webhook")]
-// Do NOT use [Authorize] here; Stripe calls this anonymously
+    [AllowAnonymous] 
     public async Task<IActionResult> StripeWebhook()
     {
-        // 1. Read the raw body string
         var json = await new StreamReader(HttpContext.Request.Body).ReadToEndAsync();
-    
         try
         {
-            // 2. Verify the signature
             var stripeSignature = Request.Headers["Stripe-Signature"];
-            var webhookSecret = _configuration["Stripe:WebhookSecret"]; // Define this in appsettings.json
+            var webhookSecret = _configuration["Stripe:WebhookSecret"];
 
             var stripeEvent = EventUtility.ConstructEvent(
                 json,
                 stripeSignature,
                 webhookSecret
             );
-
-            // 3. Handle the event
-            // Use Stripe.Events to avoid ambiguity
-            if (stripeEvent.Type == "checkout.session.completed")
+        
+            if (stripeEvent.Type == "payment_intent.succeeded")
             {
-                var session = stripeEvent.Data.Object as Stripe.Checkout.Session;
-    
-                // Now you can handle the successful payment
-                Console.WriteLine($"Payment completed for session: {session.Id}");
+                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                Console.WriteLine($"Payment succeeded: {paymentIntent.Id}");
+            
+                var result = await _paymentService.ConfirmPaymentAsync(paymentIntent.Id);
+                Console.WriteLine($"Confirm result: {result}");
             }
-
-            return Ok(); // Always return 200 OK to Stripe
+            else if (stripeEvent.Type == "payment_intent.payment_failed")
+            {
+                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                Console.WriteLine($"Payment failed: {paymentIntent.Id}");
+            }
+            else if (stripeEvent.Type == "payment_intent.canceled")
+            {
+                var paymentIntent = stripeEvent.Data.Object as PaymentIntent;
+                Console.WriteLine($"Payment canceled: {paymentIntent.Id}");
+            }
+            
+            return Ok(); 
         }
         catch (StripeException e)
         {
+            Console.WriteLine($"Stripe webhook error: {e.Message}");
             return BadRequest();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Unexpected error: {ex.Message}");
+            Console.WriteLine($"Stack: {ex.StackTrace}");
+            return StatusCode(500);
         }
     }
 }

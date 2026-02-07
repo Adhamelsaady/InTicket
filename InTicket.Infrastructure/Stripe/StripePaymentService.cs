@@ -4,6 +4,7 @@ using InTicket.Domain;
 using InTicket.Domain.Dtos;
 using InTicket.Persistence;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Stripe;
 
 namespace InTicket.Infrastructure.Stripe;
@@ -12,17 +13,19 @@ public class StripePaymentService : IStripePaymentServices
 {
     private readonly IPaymentRepository _paymentRepository;
     private readonly IConfiguration _configuration;
+    private readonly IMatchTicketRepository _matchTicketRepository;
 
-    public StripePaymentService(IPaymentRepository paymentRepository, IConfiguration configuration)
+    public StripePaymentService(IPaymentRepository paymentRepository, IConfiguration configuration , 
+        IMatchTicketRepository matchTicketRepository)
     {
         _paymentRepository = paymentRepository;
         _configuration = configuration;
+        _matchTicketRepository = matchTicketRepository;
         StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
     }
     
     public async Task<CompletePaymentResponse> InitiateStripePaymentAsync(Guid paymentCode)
     {
-        // Find payment by code
         var payment = await _paymentRepository.GetPaymentByPaymentCodeAsync(paymentCode);
         if (payment == null)
             throw new Exception("Payment not found");
@@ -36,11 +39,12 @@ public class StripePaymentService : IStripePaymentServices
 
         var options = new PaymentIntentCreateOptions
         {
-            Amount = (long)(payment.Price * 100), // Stripe uses cents
+            Amount = (long)(payment.Price * 100), 
             Currency = "usd",
             AutomaticPaymentMethods = new PaymentIntentAutomaticPaymentMethodsOptions
             {
                 Enabled = true,
+                AllowRedirects = "never" 
             },
             Metadata = new Dictionary<string, string>
             {
@@ -51,10 +55,9 @@ public class StripePaymentService : IStripePaymentServices
 
         var service = new PaymentIntentService();
         var paymentIntent = await service.CreateAsync(options);
-
         payment.PaymentIntentId = paymentIntent.Id;
-        payment.Done = true;
-
+        payment.Done = false; 
+        await _paymentRepository.UpdateAsync(payment); 
         return new CompletePaymentResponse
         {
             ClientSecret = paymentIntent.ClientSecret,
@@ -68,9 +71,16 @@ public class StripePaymentService : IStripePaymentServices
     {
         var payment = await _paymentRepository.GetPaymentByIntentAsync(paymentIntentId);
         if (payment == null)
+        {
             return false;
+        }
         payment.Done = true;
+        await _paymentRepository.UpdateAsync(payment);
+        foreach (var ticketId in payment.TicketIds)
+        {
+            await _matchTicketRepository.ChangeTicKetStatus(ticketId, TicketStatus.Booked);
+        }
+        
         return true;
     }
-
 }

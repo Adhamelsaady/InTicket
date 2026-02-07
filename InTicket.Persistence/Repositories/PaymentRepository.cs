@@ -23,4 +23,11 @@ public class PaymentRepository : IPaymentRepository
         var payment = await _dbContext.Payments.FirstOrDefaultAsync(p => p.PaymentIntentId == paymentIntentId);
         return payment;
     }
+
+    public async Task UpdateAsync(Payments payment)
+    {
+        _dbContext.Payments.Update(payment);
+        await _dbContext.SaveChangesAsync();
+        Console.WriteLine($"[Repository] Updated payment {payment.PaymentId} - Done: {payment.Done}");
+    }
 }
