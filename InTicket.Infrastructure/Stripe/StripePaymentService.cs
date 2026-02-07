@@ -1,4 +1,5 @@
-﻿using InTicket.Application.Contracts.Infrasructure;
+﻿using System.Security.Claims;
+using InTicket.Application.Contracts.Infrasructure;
 using InTicket.Application.Contracts.Presistance;
 using InTicket.Domain;
 using InTicket.Domain.Dtos;
@@ -24,10 +25,10 @@ public class StripePaymentService : IStripePaymentServices
         StripeConfiguration.ApiKey = _configuration["Stripe:SecretKey"];
     }
     
-    public async Task<CompletePaymentResponse> InitiateStripePaymentAsync(Guid paymentCode)
+    public async Task<CompletePaymentResponse> InitiateStripePaymentAsync(Guid paymentCode , string userId)
     {
         var payment = await _paymentRepository.GetPaymentByPaymentCodeAsync(paymentCode);
-        if (payment == null)
+        if (payment == null || payment.UserId != userId)
             throw new Exception("Payment not found");
         if (payment.ExpirationDate < DateTime.UtcNow)
         {

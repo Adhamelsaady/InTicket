@@ -28,8 +28,10 @@ public class BookingController : ControllerBase
     [HttpPost("{matchId:guid}/book")]
     public async Task<IActionResult> BookTickets(List <MatchTicketForBookingDto> tickets , Guid matchId)
     {
-        if (tickets == null || !tickets.Any())
-            return BadRequest("No tickets provided.");
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         var bookTicketsRequest = new BookMatchTicketsRequest()
         {
             MatchTicketForBookingDtos =  tickets,
@@ -50,10 +52,14 @@ public class BookingController : ControllerBase
     [Authorize]
     [HttpPost("{matchId:guid}/complete_payment")]
     public async Task<IActionResult> CompletePayment([FromBody] CompletePaymentRequest request)
-    {
+    { 
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
         try
         {
-            var response = await _paymentService.InitiateStripePaymentAsync(request.PaymentCode);
+            var response = await _paymentService.InitiateStripePaymentAsync(request.PaymentCode , User.FindFirstValue(ClaimTypes.NameIdentifier));
             return Ok(response);
         }
         catch (Exception ex)

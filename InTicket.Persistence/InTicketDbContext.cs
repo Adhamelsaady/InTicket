@@ -14,13 +14,9 @@ public class InTicketDbContext : IdentityDbContext<ApplicationUser>
     
     public DbSet<BaseEvent> BaseEvents { get; set; }
     public DbSet<Match> Matches { get; set; }
-    public DbSet<Concert> Concerts { get; set; }
     
     public DbSet<Team> Teams { get; set; } 
     public DbSet<Delegation> Delegations { get; set; }
-
-    public DbSet<ConcertTicket> ConcertTickets { get; set; }
-    
     public DbSet<MatchTicket> MatchTickets { get; set; }
     
     public DbSet<Ticket> Tickets { get; set; }
@@ -32,11 +28,9 @@ public class InTicketDbContext : IdentityDbContext<ApplicationUser>
         base.OnModelCreating(modelBuilder);
         modelBuilder.ConfigureBaseEvent();
         modelBuilder.ConfigureMatches();
-        modelBuilder.ConfigureConcerts();
         modelBuilder.ConfigureDelegations();
         modelBuilder.ConfigureTeams();
         modelBuilder.ConfigureTickets();
-        modelBuilder.ConfigureConcertTickets();
         modelBuilder.ConfigureMatchTickets();
         modelBuilder.ConfigurePayments();
     }

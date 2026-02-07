@@ -1,6 +1,6 @@
 ﻿namespace InTicket.Application.Feauters.Profile.Queries.GetMyPaymenrs;
 
-public class GetPaymentsResponse 
+public class GetPaymentResponse 
 {
     public Guid PaymentId { get; set; }
     public DateTime ExpirationDate { get; set; }

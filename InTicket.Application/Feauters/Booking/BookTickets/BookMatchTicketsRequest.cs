@@ -1,12 +1,13 @@
-﻿using InTicket.Domain.Dtos;
+﻿using System.ComponentModel.DataAnnotations;
+using InTicket.Domain.Dtos;
 using MediatR;
 
 namespace InTicket.Application.Feauters.Booking.BookTickets;
 
 public class BookMatchTicketsRequest : IRequest<BookMatchTicketsResponse>
 {
-    public List<MatchTicketForBookingDto> MatchTicketForBookingDtos { get; set; }
-    public string UserId { get; set; }
-    public DateTime BookingDate { get; set; }
-    public Guid MatchId { get; set; }
+    [Required] public List<MatchTicketForBookingDto> MatchTicketForBookingDtos { get; set; }
+    [Required] public string UserId { get; set; }
+    [Required] public DateTime BookingDate { get; set; }
+    [Required] public Guid MatchId { get; set; }
 }
