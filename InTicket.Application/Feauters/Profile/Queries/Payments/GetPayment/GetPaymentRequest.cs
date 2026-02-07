@@ -1,6 +1,10 @@
-﻿namespace InTicket.Application.Feauters.Profile.Queries.GetPayment;
+﻿using InTicket.Application.Feauters.Profile.Queries.GetMyPaymenrs;
+using MediatR;
 
-public class GetPaymentRequest
+namespace InTicket.Application.Feauters.Profile.Queries.GetPayment;
+
+public class GetPaymentRequest : IRequest<GetPaymentResponse>
 {
-    
+    public Guid PaymentId { get; set; }
+    public string UserId { get; set; }
 }
