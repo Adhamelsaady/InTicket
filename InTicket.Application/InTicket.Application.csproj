@@ -17,4 +17,8 @@
       <ProjectReference Include="..\InTicket.Domain\InTicket.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Feauters\Profile\Queries\Delegations\" />
+    </ItemGroup>
+
 </Project>

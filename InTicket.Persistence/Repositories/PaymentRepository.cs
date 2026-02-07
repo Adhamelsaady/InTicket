@@ -62,7 +62,6 @@ public class PaymentRepository : IPaymentRepository
         var paymentsList = await payments
             .Skip((paymentResourceParameters.PageNumber - 1) * paymentResourceParameters.PageSize)
             .Take(paymentResourceParameters.PageSize).ToListAsync();
-
         return new PagedResult<Payments>
         {
             Items = paymentsList,
