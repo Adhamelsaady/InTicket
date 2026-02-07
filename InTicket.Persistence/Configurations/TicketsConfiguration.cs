@@ -12,9 +12,6 @@ public static class TicketsConfiguration
          
         modelBuilder.Entity<MatchTicket>()
             .ToTable("MatchTickets");
-        
-        modelBuilder.Entity<ConcertTicket>()
-            .ToTable("EventTickets");
         modelBuilder.Entity<Ticket>(entity =>
         {
             entity.HasOne(t => t.Holder)
