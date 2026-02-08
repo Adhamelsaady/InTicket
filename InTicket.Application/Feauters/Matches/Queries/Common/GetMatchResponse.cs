@@ -9,8 +9,6 @@ public class GetMatchResponse
     
     public string Location { get; set; } = string.Empty;
     public string Venue { get; set; } = string.Empty;
-    public int Price { get; set; }
-    public int TotalCapacity { get; set; }
     public TeamDto HomeTeam { get; set; } = null!;
     public TeamDto AwayTeam { get; set; } = null!;
     public string League { get; set; } = string.Empty;  
