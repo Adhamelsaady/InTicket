@@ -21,7 +21,7 @@ public class MatchController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("id" , Name =  "GetMatchById")]
+    [HttpGet("{id::Guid}" , Name =  "GetMatchById")]
     [AllowAnonymous]
     public async Task<IActionResult> GetMatchById(Guid id)
     {
