@@ -40,7 +40,7 @@ public class ProfileController : ControllerBase
 
     [HttpPost("delegation")]
     [Authorize]
-    public async Task<IActionResult> Delegate([FromBody] [Required] [Length(14, 14)] string delegateNationalId)
+    public async Task<IActionResult> Delegate([FromBody] [Required] [Length(14, 14)] DelegationForCreateDto delegationForCreateDto)
     {
         if (!ModelState.IsValid)
         {
@@ -49,14 +49,14 @@ public class ProfileController : ControllerBase
         var addDelegateRequest = new AddDelegateRequest()
         {
             DelegatorId = User.FindFirstValue(ClaimTypes.NameIdentifier),
-            DelegateNationalId = delegateNationalId
+            DelegateNationalId = delegationForCreateDto.DelegateNationalId
         };
         var result = await _mediator.Send(addDelegateRequest);
         if (result == false)
             return BadRequest("National id is wrong or you already delegated someone.");
         return CreatedAtRoute("GetMyDelegation",
             new { }
-            , $"Your delegation to user with national id {delegateNationalId} has been created.");
+            , $"Your delegation to user with national id {delegationForCreateDto.DelegateNationalId} has been created.");
     }
 
     [HttpDelete("delegation/{id}")]
