@@ -21,26 +21,25 @@ public class CreateMatchRequestHandler : IRequestHandler<CreateMatchRequest , Cr
     public async Task<CreateMatchRequestResponse> Handle(CreateMatchRequest request, CancellationToken cancellationToken)
     {
         var matchEntity = _mapper.Map<Match>(request);
-        
         await _matchRepository.AddAsync(matchEntity);
         await _matchRepository.SaveChangesAsync();
-        foreach (var item in request.TicketsDistribution)
+        var ticketsToBatch = request.TicketsDistribution.SelectMany(item =>
         {
+            var ticketClass = item.Key;
             var ticketData = item.Value;
-            for(int i = 0; i < ticketData.Count; ++i)
+            return Enumerable.Range(0, ticketData.Count).Select(_ => new MatchTicket
             {
-                var ticketToAdd = new MatchTicket()
-                {
-                    TicketId = Guid.NewGuid(),
-                    Price = ticketData.Price,
-                    MatchId = matchEntity.Id,
-                    HomeTeamTicket = ticketData.IsHomeTeam,
-                    TicketClass = item.Key,
-                };
-                await _ticketRepository.AddAsync(ticketToAdd);
-            }
+                TicketId = Guid.NewGuid(),
+                Price = ticketData.Price,
+                MatchId = matchEntity.Id,
+                HomeTeamTicket = ticketData.IsHomeTeam,
+                TicketClass = ticketClass,
+            });
+        }).ToList();
+        if (ticketsToBatch.Count > 0)
+        {
+            await _ticketRepository.AddRangeAsync(ticketsToBatch);
         }
-        await _ticketRepository.SaveChangesAsync();
-        return new CreateMatchRequestResponse() { Id = matchEntity.Id };
+        return new CreateMatchRequestResponse { Id = matchEntity.Id };
     }
 }

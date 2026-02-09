@@ -39,4 +39,5 @@ public class MatchTicketRepository : IMatchTicketRepository
         ticket.Status = ticketStatus;
         await _dbContext.SaveChangesAsync();
     }
+    
 }

@@ -33,6 +33,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
         return entity;
     }
 
+    public async Task AddRangeAsync(IEnumerable<T> entities)
+    {
+        await _dbContext.Set<T>().AddRangeAsync(entities);
+    }
+
     public async Task UpdateAsync(T entity)
     {
         _dbContext.Entry(entity).State = EntityState.Modified;

@@ -13,4 +13,6 @@ public interface IBaseRepository <T> where T : class
     Task DeleteAsync(T entity);
     Task<int> SaveChangesAsync();
     Task<ApplicationUser?> GetByNationalIdAsync(string nationalId);
+    Task AddRangeAsync(IEnumerable<T> entities);
+
 }
