@@ -8,10 +8,10 @@ namespace InTicket.Application.Feauters.Profile.Queries.GetPayment;
 
 public class GetPaymentRequestHandler : IRequestHandler<GetPaymentRequest , GetPaymentResponse>
 {
-    private readonly IBaseRepository<Payments> _paymentRepository;
+    private readonly IBaseRepository<Payment> _paymentRepository;
     private readonly IMapper _mapper;
 
-    public GetPaymentRequestHandler(IBaseRepository<Payments>  paymentRepository , IMapper mapper)
+    public GetPaymentRequestHandler(IBaseRepository<Payment>  paymentRepository , IMapper mapper)
     {
         _paymentRepository = paymentRepository;
         _mapper = mapper;

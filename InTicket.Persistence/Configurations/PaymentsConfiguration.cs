@@ -7,7 +7,7 @@ public static class PaymentsConfiguration
 {
     public static void ConfigurePayments(this ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Payments> (p =>
+        modelBuilder.Entity<Payment> (p =>
         {
             p.HasKey(payments => payments.PaymentId);
             p.HasOne(p => p.User)

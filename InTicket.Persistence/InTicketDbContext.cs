@@ -21,7 +21,7 @@ public class InTicketDbContext : IdentityDbContext<ApplicationUser>
     
     public DbSet<Ticket> Tickets { get; set; }
     
-    public DbSet<Payments> Payments { get; set; }
+    public DbSet<Payment> Payments { get; set; }
     
     public DbSet<RefreshTokens> RefreshTokens { get; set; }
     

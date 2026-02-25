@@ -2,7 +2,7 @@
 
 namespace InTicket.Domain;
 
-public class Payments
+public class Payment
 {
     public Guid PaymentId { get;  set; }
     public int Price { get; set; }

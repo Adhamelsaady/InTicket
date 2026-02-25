@@ -16,7 +16,7 @@ public class MappingProfile : Profile
         CreateMap<Match, CreateMatchRequest>().ReverseMap();
         CreateMap<Match, GetMatchResponse>();
         CreateMap<TeamDto, Team>().ReverseMap();
-        CreateMap<Payments , GetPaymentResponse>().ForMember(dest => dest.TicketsCount, 
+        CreateMap<Payment , GetPaymentResponse>().ForMember(dest => dest.TicketsCount, 
             opt => opt.MapFrom(src => src.TicketIds.Count));
     }
 }

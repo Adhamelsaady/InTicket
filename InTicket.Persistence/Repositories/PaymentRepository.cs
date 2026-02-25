@@ -9,31 +9,31 @@ namespace InTicket.Persistence.Repositories;
 public class PaymentRepository : IPaymentRepository
 {
     private readonly InTicketDbContext _dbContext;
-    private IBaseRepository<Payments> _baseRepositoryImplementation;
+    private IBaseRepository<Payment> _baseRepositoryImplementation;
 
     public PaymentRepository(InTicketDbContext dbContext)
     {
         _dbContext = dbContext;
     }
 
-    public async Task<Payments> GetPaymentByPaymentCodeAsync(Guid paymentCode)
+    public async Task<Payment> GetPaymentByPaymentCodeAsync(Guid paymentCode)
     {
         return await _dbContext.Payments.FirstOrDefaultAsync(p => p.PaymentId ==  paymentCode);
     }
-    public async Task<Payments> GetPaymentByIntentAsync(string paymentIntentId)
+    public async Task<Payment> GetPaymentByIntentAsync(string paymentIntentId)
     {
         var payment = await _dbContext.Payments.FirstOrDefaultAsync(p => p.PaymentIntentId == paymentIntentId);
         return payment;
     }
 
-    public async Task UpdateAsync(Payments payment)
+    public async Task UpdateAsync(Payment payment)
     {
         _dbContext.Payments.Update(payment);
         await _dbContext.SaveChangesAsync();
         Console.WriteLine($"[Repository] Updated payment {payment.PaymentId} - Done: {payment.Done}");
     }
 
-    public async Task<PagedResult<Payments>> GetAllPaymentsOfUserAsync(PaymentResourceParameters paymentResourceParameters , 
+    public async Task<PagedResult<Payment>> GetAllPaymentsOfUserAsync(PaymentResourceParameters paymentResourceParameters , 
         string userId)
     {
         var payments =  _dbContext.Payments.AsQueryable();
@@ -62,7 +62,7 @@ public class PaymentRepository : IPaymentRepository
         var paymentsList = await payments
             .Skip((paymentResourceParameters.PageNumber - 1) * paymentResourceParameters.PageSize)
             .Take(paymentResourceParameters.PageSize).ToListAsync();
-        return new PagedResult<Payments>
+        return new PagedResult<Payment>
         {
             Items = paymentsList,
             TotalCount = totalCount,

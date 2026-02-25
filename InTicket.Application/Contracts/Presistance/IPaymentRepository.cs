@@ -6,10 +6,10 @@ namespace InTicket.Application.Contracts.Presistance;
 
 public interface IPaymentRepository
 {
-    Task<Payments> GetPaymentByPaymentCodeAsync(Guid paymentCode);
-    Task<Payments> GetPaymentByIntentAsync(string paymentIntentId);
-    Task UpdateAsync(Payments payment);
+    Task<Payment> GetPaymentByPaymentCodeAsync(Guid paymentCode);
+    Task<Payment> GetPaymentByIntentAsync(string paymentIntentId);
+    Task UpdateAsync(Payment payment);
 
-    Task<PagedResult<Payments>> GetAllPaymentsOfUserAsync(PaymentResourceParameters paymentResourceParameters,
+    Task<PagedResult<Payment>> GetAllPaymentsOfUserAsync(PaymentResourceParameters paymentResourceParameters,
         string userId);
 }

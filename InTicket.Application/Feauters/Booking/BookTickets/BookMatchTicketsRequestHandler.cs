@@ -12,13 +12,13 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
     private readonly IMatchRepository _matchRepository;
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IMatchTicketRepository _matchTicketRepository;
-    private readonly IBaseRepository<Payments> _paymentRepository;
+    private readonly IBaseRepository<Payment> _paymentRepository;
 
     public BookMatchTicketsRequestHandler(IDelegationsRepository delegationsRepository,
         IMatchRepository matchRepository,
         UserManager<ApplicationUser> userManager,
         IMatchTicketRepository matchTicketRepository,
-        IBaseRepository<Payments> paymentRepository)
+        IBaseRepository<Payment> paymentRepository)
     {
         _delegationsRepository = delegationsRepository;
         _matchRepository = matchRepository;
@@ -41,7 +41,7 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         if (tickets.Contains(null) || tickets.Count == 0)
             return new BookMatchTicketsResponse() { IsSuccess = false };
 
-        var payment = new Payments()
+        var payment = new Payment()
         {
             PaymentId = Guid.NewGuid(),
             UserId = request.UserId,
