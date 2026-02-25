@@ -1,8 +1,9 @@
-﻿namespace InTicket.Application.Feauters.Authentication.Register;
+﻿using InTicket.Domain.Dtos;
 
-public class AuthenticationResponse
+namespace InTicket.Application.Feauters.Authentication.Register;
+
+public class AuthenticationResponse : AuthResult
 {
-    public string Token { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public string FullName { get; set; } = string.Empty;
     public List<string> Roles { get; set; } = new();

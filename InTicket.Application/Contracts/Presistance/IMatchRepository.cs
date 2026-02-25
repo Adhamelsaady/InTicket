@@ -7,5 +7,5 @@ namespace InTicket.Application.Contracts.Presistance;
 public interface IMatchRepository
 {
     Task<PagedResult<Match>> GetAllMatchesAsync(MatchResourceParameters matchResourceParameters , bool isRequestedByAdmin);
-    Task <Match> GetMatchByIdAsync(Guid matchId , bool isRequestedByAdmin);
+    Task <Match> GetMatchByIdAsync(Guid matchId , bool isRequestedByAdmin); 
 }

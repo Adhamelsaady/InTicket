@@ -47,6 +47,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationR
 
         return new AuthenticationResponse
         {
+            Success = true,
             Token = token,
             Email = user.Email!,
             FullName = user.FirstName + " " + user.LastName,
