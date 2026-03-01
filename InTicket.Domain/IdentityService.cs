@@ -12,7 +12,18 @@ public static class IdentityService
     {
         var jwtSettings = configuration.GetSection("Jwt");
         var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
-        
+        var tokenValidationParameters = new TokenValidationParameters()
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = jwtSettings["Issuer"],
+            ValidAudience = jwtSettings["Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero
+        };
+        services.AddSingleton(tokenValidationParameters);
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -22,18 +33,8 @@ public static class IdentityService
         .AddJwtBearer(options =>
         {
             options.SaveToken = true;
-            options.RequireHttpsMetadata = false; // Set to true in production
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-                ValidateIssuer = true,
-                ValidateAudience = true,
-                ValidateLifetime = true,
-                ValidateIssuerSigningKey = true,
-                ValidIssuer = jwtSettings["Issuer"],
-                ValidAudience = jwtSettings["Audience"],
-                IssuerSigningKey = new SymmetricSecurityKey(key),
-                ClockSkew = TimeSpan.Zero 
-            };
+            options.RequireHttpsMetadata = false;
+            options.TokenValidationParameters = tokenValidationParameters;
         });
         
         services.AddAuthorization();

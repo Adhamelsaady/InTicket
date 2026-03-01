@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="Feauters\Authentication\Commands\RefreshToken\" />
       <Folder Include="Feauters\Profile\Queries\Delegations\" />
     </ItemGroup>
 

@@ -38,15 +38,33 @@ public class JwtTokenGeneration : IJwtTokenGeneration
             Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
         
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddDays(7),
+            expires: DateTime.UtcNow.AddSeconds(_configuration.GetValue<int>("Jwt:Lifetime")), // todo : update it to 5 minutes
             signingCredentials: credentials
         );
 
-        return new JwtSecurityTokenHandler().WriteToken(token);
+        var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
+        var refreshToken = new RefreshTokens()
+        {
+            CreatedAt = DateTime.UtcNow,
+            Token = $"GenerateRefreshToken(25)_{Guid.NewGuid()}",
+            UserId = user.Id,
+            isRevoked = false,
+            isUsed = false,
+            JwtId = token.Id,
+            ExpiresAt = DateTime.UtcNow.AddMonths(1)
+        };
+        // add the refreshToken to the db
+        
+    }
+
+    private string GenerateRefreshToken(int length)
+    {
+        var random = new Random();
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@!$#_";
+        return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }
