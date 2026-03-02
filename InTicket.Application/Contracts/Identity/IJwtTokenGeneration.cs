@@ -1,9 +1,9 @@
 ﻿using InTicket.Domain;
+using InTicket.Domain.Dtos;
 
 namespace InTicket.Application.Contracts;
 
 public interface IJwtTokenGeneration
 {
-    public string GenerateJwtToken(ApplicationUser user, List<string> roles);
-    
+    public Task <TokenResult> GenerateJwtToken(ApplicationUser user, List<string> roles);
 }

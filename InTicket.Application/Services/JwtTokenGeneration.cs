@@ -2,7 +2,9 @@
 using System.Security.Claims;
 using System.Text;
 using InTicket.Application.Contracts;
+using InTicket.Application.Contracts.Presistance;
 using InTicket.Domain;
+using InTicket.Domain.Dtos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,12 +13,13 @@ namespace InTicket.Application.Services;
 public class JwtTokenGeneration : IJwtTokenGeneration
 {
     private readonly IConfiguration _configuration;
-
-    public JwtTokenGeneration(IConfiguration configuration)
+    private readonly IBaseRepository <RefreshTokens> _refreshTokens;
+    public JwtTokenGeneration(IConfiguration configuration , IBaseRepository <RefreshTokens> refreshTokens)
     {
         _configuration = configuration;
+        _refreshTokens = refreshTokens;
     }
-    public string GenerateJwtToken(ApplicationUser user, List<string> roles)
+    public async Task<TokenResult> GenerateJwtToken(ApplicationUser user, List<string> roles)
     {
         var claims = new List<Claim>
         {
@@ -50,15 +53,21 @@ public class JwtTokenGeneration : IJwtTokenGeneration
         var refreshToken = new RefreshTokens()
         {
             CreatedAt = DateTime.UtcNow,
-            Token = $"GenerateRefreshToken(25)_{Guid.NewGuid()}",
+            Token = $"{GenerateRefreshToken(25)}_{Guid.NewGuid()}",
             UserId = user.Id,
             isRevoked = false,
             isUsed = false,
             JwtId = token.Id,
             ExpiresAt = DateTime.UtcNow.AddMonths(1)
         };
+        await _refreshTokens.AddAsync(refreshToken);
         // add the refreshToken to the db
-        
+        var tokenResult = new TokenResult()
+        {
+            Token = tokenString,
+            RefreshToken = refreshToken.Token,
+        };
+        return tokenResult;
     }
 
     private string GenerateRefreshToken(int length)

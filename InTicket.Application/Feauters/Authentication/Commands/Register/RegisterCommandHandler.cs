@@ -36,14 +36,24 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
         var existingUser = await _userManager.FindByEmailAsync(request.Email);
         if (existingUser != null)
         {
-            throw new Exception($"Email '{request.Email}' is already registered.");
+            return new AuthenticationResponse()
+            {
+                Success = false,
+                Errors = new List<string>()
+                    { $"{existingUser.FirstName} {existingUser.LastName} is already registered." }
+            };
         }
 
         var existingNationalId = await _userManager.Users
             .FirstOrDefaultAsync(u => u.NationalId == request.NationalId);
         if (existingNationalId != null)
         {
-            throw new Exception($"National Id '{request.NationalId}' is already registered.");
+            return new AuthenticationResponse()
+            {
+                Success = false,
+                Errors = new List<string>()
+                    { $"{existingUser.FirstName} {existingUser.LastName} is already registered." }
+            };
         }
 
         var otp = _otpService.GenerateOtp();
@@ -56,7 +66,12 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
 
         if (!result.Succeeded)
         {
-            return null;
+            return new AuthenticationResponse()
+            {
+                Success = false,
+                Errors = new List<string>()
+                    { "Something went wrong. Please try again." }
+            };
         }
 
         await _userManager.AddToRoleAsync(user, "User");
@@ -65,11 +80,12 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
             user.FirstName,
             otp);
 
-        var token = _jwtTokenGeneration.GenerateJwtToken(user, new List<string> { "User" });
+        var token = await _jwtTokenGeneration.GenerateJwtToken(user, new List<string> { "User" });
 
         return new AuthenticationResponse
         {
-            Token = token,
+            Token = token.RefreshToken,
+            RefreshToken = token.RefreshToken,
             Email = user.Email!,
             FullName = user.FirstName + user.LastName,
             Roles = new List<string> { "User" }

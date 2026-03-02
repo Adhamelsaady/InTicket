@@ -29,6 +29,10 @@ public class AuthController : ControllerBase
         }
 
         var result = await _mediator.Send(registerCommand);
+        if (!result.Success)
+        {
+            return BadRequest(result.Errors);
+        }
 
         return Ok(new
         {
@@ -46,6 +50,11 @@ public class AuthController : ControllerBase
         }
 
         var result = await _mediator.Send(loginCommand);
+        if (!result.Success)
+        {
+            return BadRequest(result.Errors);
+        }
+
         return Ok(result);
     }
 
@@ -120,4 +129,5 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = "Password reset successfully! You can now login with your new password." });
     }
+    
 }

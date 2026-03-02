@@ -24,31 +24,35 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationR
     public async Task<AuthenticationResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user == null)
+        if (user == null || !user.EmailConfirmed)
         {
-            throw new Exception("No user found");
-        }
-
-        if (!user.EmailConfirmed)
-        {
-            throw new Exception("Email not confirmed");
+            return new AuthenticationResponse()
+            {
+                Success = false,
+                Errors = new List<string>() {"Wrong email or password"}
+            };
         }
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
         if (!result.Succeeded)
         {
-            throw new Exception("Incorrect email or password");
+            return new AuthenticationResponse()
+            {
+                Success = false,
+                Errors = new List<string>() {"Wrong email or password"}
+            };
         }
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        var token = _jwtTokenGeneration.GenerateJwtToken(user, roles.ToList());
+        var token = await _jwtTokenGeneration.GenerateJwtToken(user, roles.ToList());
 
         return new AuthenticationResponse
         {
             Success = true,
-            Token = token,
+            Token = token.Token,
+            RefreshToken = token.RefreshToken,
             Email = user.Email!,
             FullName = user.FirstName + " " + user.LastName,
             Roles = roles.ToList()
