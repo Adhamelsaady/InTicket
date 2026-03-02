@@ -2,7 +2,7 @@
 
 namespace InTicket.Domain;
 
-public class RefreshTokens
+public class RefreshToken
 {
     public Guid Id { get; set; }
     public DateTime CreatedAt { get; set; }

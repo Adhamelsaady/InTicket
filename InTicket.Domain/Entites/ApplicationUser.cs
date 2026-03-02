@@ -27,5 +27,5 @@ public class ApplicationUser : IdentityUser
     
     public ICollection <Payment> ? Payments { get; set; } = new List<Payment>();
     
-    public ICollection <RefreshTokens> RefreshTokens { get; set; } = new List<RefreshTokens>();
+    public ICollection <RefreshToken> RefreshTokens { get; set; } = new List<RefreshToken>();
 }

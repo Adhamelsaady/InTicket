@@ -7,7 +7,7 @@ namespace InTicket.Application.Feauters.Authentication.Commands.RefreshToken;
 public class RefreshTokenRequest : IRequest<AuthResult>
 {
     [Required]
-    string Token { get; set; }
+    public string Token { get; set; }
     [Required]
-    string RefreshToken { get; set; }
+    public string RefreshToken { get; set; }
 }

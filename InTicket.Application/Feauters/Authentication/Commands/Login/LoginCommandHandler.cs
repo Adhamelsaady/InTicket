@@ -11,7 +11,6 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, AuthenticationR
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IJwtTokenGeneration _jwtTokenGeneration;
-
     public LoginCommandHandler(UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
         IJwtTokenGeneration jwtTokenGeneration)

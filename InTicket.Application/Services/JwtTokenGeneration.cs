@@ -13,8 +13,8 @@ namespace InTicket.Application.Services;
 public class JwtTokenGeneration : IJwtTokenGeneration
 {
     private readonly IConfiguration _configuration;
-    private readonly IBaseRepository <RefreshTokens> _refreshTokens;
-    public JwtTokenGeneration(IConfiguration configuration , IBaseRepository <RefreshTokens> refreshTokens)
+    private readonly IBaseRepository <RefreshToken> _refreshTokens;
+    public JwtTokenGeneration(IConfiguration configuration , IBaseRepository <RefreshToken> refreshTokens)
     {
         _configuration = configuration;
         _refreshTokens = refreshTokens;
@@ -45,12 +45,12 @@ public class JwtTokenGeneration : IJwtTokenGeneration
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddSeconds(_configuration.GetValue<int>("Jwt:Lifetime")), // todo : update it to 5 minutes
+            expires: DateTime.UtcNow.AddMinutes(_configuration.GetValue<int>("Jwt:Lifetime")), // todo : update it to 5 minutes
             signingCredentials: credentials
         );
 
         var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-        var refreshToken = new RefreshTokens()
+        var refreshToken = new RefreshToken()
         {
             CreatedAt = DateTime.UtcNow,
             Token = $"{GenerateRefreshToken(25)}_{Guid.NewGuid()}",
