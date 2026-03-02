@@ -58,7 +58,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("confirm-email")]
+    [HttpPost("confirm_email")]
     public async Task<IActionResult> ConfirmEmail(EmailConfirmationRequest emailConfirmationRequest)
     {
         if (!ModelState.IsValid)
@@ -75,7 +75,7 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("resend-confirmation-otp")]
+    [HttpPost("resend_confirmation_otp")]
     public async Task<IActionResult> ResendConfirmationDto(ResendEmailConfirmationOtpRequest
         resendEmailConfirmationOtpRequest)
     {
@@ -94,7 +94,7 @@ public class AuthController : ControllerBase
         return Ok(new { message = "OTP resent successfully! Please check your email." });
     }
 
-    [HttpPost("forgot-password")]
+    [HttpPost("forgot_password")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest forgotPasswordRequest)
     {
         if (!ModelState.IsValid)
@@ -111,7 +111,7 @@ public class AuthController : ControllerBase
         return Ok(new { message = "If your email exists, you will receive a password reset OTP shortly." });
     }
 
-    [HttpPost("reset-password")]
+    [HttpPost("reset_password")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest)
     {
         if (!ModelState.IsValid)
@@ -130,4 +130,5 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Password reset successfully! You can now login with your new password." });
     }
     
+    [HttpPost("refresh_token")]
 }

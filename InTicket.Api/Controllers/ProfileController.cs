@@ -59,7 +59,7 @@ public class ProfileController : ControllerBase
             , $"Your delegation to user with national id {delegationForCreateDto.DelegateNationalId} has been created.");
     }
 
-    [HttpDelete("delegation/{id}")]
+    [HttpDelete("delegation/{id::guid}")]
     [Authorize]
     public async Task<IActionResult> DeleteDelegation([Required] Guid id)
     {
@@ -90,7 +90,7 @@ public class ProfileController : ControllerBase
         return Ok(result);
     }
 
-    [HttpGet("payments/{paymentId}")]
+    [HttpGet("payments/{paymentId::guid}")]
     [Authorize]
     public async Task<IActionResult> GetPayment([FromRoute] Guid paymentId)
     {

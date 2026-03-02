@@ -60,7 +60,7 @@ public class MatchController : ControllerBase
             result);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("{id::guid}")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ActivateMatchBooking([FromRoute] Guid id)
     {
@@ -70,7 +70,7 @@ public class MatchController : ControllerBase
         return Ok(new { message = "Match activated successfully", matchId = id });
     }
     
-    [HttpDelete("{id}")]
+    [HttpDelete("{id::guid}")]
     [Authorize(Roles = "Admin")]  
     public async Task<IActionResult> DeleteMatch(Guid id)
     {
