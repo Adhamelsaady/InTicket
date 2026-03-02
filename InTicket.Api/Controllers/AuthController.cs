@@ -1,4 +1,5 @@
 ﻿using InTicket.Application.Feauters.Authentication.Commands.ForgotPassword;
+using InTicket.Application.Feauters.Authentication.Commands.RefreshToken;
 using InTicket.Application.Feauters.Authentication.Commands.ResetPassword;
 using InTicket.Application.Feauters.Authentication.Confirmations.EmailConfirmations;
 using InTicket.Application.Feauters.Authentication.Confirmations.ResendEmailConfirmationOtp;
@@ -129,6 +130,17 @@ public class AuthController : ControllerBase
 
         return Ok(new { message = "Password reset successfully! You can now login with your new password." });
     }
-    
+
     [HttpPost("refresh_token")]
+    public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var result = await _mediator.Send(refreshTokenRequest);
+        if(!result.Success) 
+            return BadRequest(result.Errors);
+        return Ok(result);
+    }
 }
