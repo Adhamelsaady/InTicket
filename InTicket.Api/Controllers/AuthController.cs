@@ -1,4 +1,5 @@
 ﻿using InTicket.Application.Feauters.Authentication.Commands.ForgotPassword;
+using InTicket.Application.Feauters.Authentication.Commands.Logout;
 using InTicket.Application.Feauters.Authentication.Commands.RefreshToken;
 using InTicket.Application.Feauters.Authentication.Commands.ResetPassword;
 using InTicket.Application.Feauters.Authentication.Confirmations.EmailConfirmations;
@@ -142,5 +143,23 @@ public class AuthController : ControllerBase
         if(!result.Success) 
             return BadRequest(result.Errors);
         return Ok(result);
+    }
+
+    [HttpPost("logout")]
+    public async Task<IActionResult> Logout([FromBody] LogoutRequest logoutRequest)
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        var result = await _mediator.Send(logoutRequest);
+        if (result)
+        {
+            return NoContent();
+        }
+        else
+        {
+            return BadRequest("Something went wrong. Please try again.");
+        }
     }
 }

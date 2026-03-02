@@ -1,6 +1,10 @@
-﻿namespace InTicket.Application.Feauters.Authentication.Commands.Logout;
+﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 
-public class LogoutRequest
+namespace InTicket.Application.Feauters.Authentication.Commands.Logout;
+
+public class LogoutRequest : IRequest<bool>
 {
-    
+    [Required]
+    public string RefreshToken { get; set; }
 }
