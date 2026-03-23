@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using InTicket.Application.Contracts;
 using InTicket.Application.Contracts.Infrasructure;
+using InTicket.Application.Contracts.Presistance;
 using InTicket.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -16,7 +17,6 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
     private readonly IMapper _mapper;
     private readonly IEmailService _emailService;
     private readonly IJwtTokenGeneration _jwtTokenGeneration;
-
     public RegisterCommandHandler(
         UserManager<ApplicationUser> userManager,
         IOtpService otpService,

@@ -2,29 +2,38 @@
 using InTicket.Application.Feauters.Matches.Commands.ActivateMatch;
 using MediatR;
 
-public class ActivateMatchRequestHandler : IRequestHandler<ActivateMatchRequest , bool>
+public class ActivateMatchRequestHandler : IRequestHandler<ActivateMatchRequest, bool>
 {
-    
-    private readonly IBaseRepository <InTicket.Domain.Match> _matchRepository;
+    private readonly IBaseRepository<InTicket.Domain.Match> _matchRepository;
 
-    public ActivateMatchRequestHandler(IBaseRepository <InTicket.Domain.Match> matchRepository)
+    public ActivateMatchRequestHandler(IBaseRepository<InTicket.Domain.Match> matchRepository)
     {
         _matchRepository = matchRepository;
     }
-    
+
     public async Task<bool> Handle(ActivateMatchRequest request, CancellationToken cancellationToken)
     {
-        var match = await _matchRepository.GetByIdAsync(request.Id);
-        if (match == null) 
-            return false;
-        if(!match.IsActive)
+        await using var transaction = await _matchRepository.BeginTransactionAsync();
+        try
         {
-            match.IsActive = true;
-            match.FanPriorityBookingStart = DateTime.Now.AddMinutes(1);
-            match.GeneralBookingStart = match.EventDate.AddHours(-15);
+            var match = await _matchRepository.GetByIdAsync(request.Id);
+            if (match == null)
+                return false;
+            if (!match.IsActive)
+            {
+                match.IsActive = true;
+                match.FanPriorityBookingStart = DateTime.Now.AddMinutes(1);
+                match.GeneralBookingStart = match.EventDate.AddHours(-15);
+            }
+
+            await transaction.CommitAsync();
+            await _matchRepository.SaveChangesAsync();
+            return true;
         }
-        
-        await _matchRepository.SaveChangesAsync();
-        return true;
+        catch (Exception)
+        {
+            await transaction.RollbackAsync();
+            return false;
+        }
     }
 }
