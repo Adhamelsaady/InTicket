@@ -15,13 +15,24 @@ public class DeleteDelegationRequestHandler : IRequestHandler<DeleteDelegationRe
     }
     public async Task<bool> Handle(DeleteDelegationRequest request, CancellationToken cancellationToken)
     {
-        var delegation = await _delegationRepository.GetByIdAsync(request.DelegationId);
-        if (delegation.DelegatorId != request.DelegatorId)
+        await using var transaction = await _delegationRepository.BeginTransactionAsync();
+        try
         {
-            return  false;
+            var delegation = await _delegationRepository.GetByIdAsync(request.DelegationId);
+            if (delegation.DelegatorId != request.DelegatorId)
+            {
+                return false;
+            }
+
+            await _delegationRepository.DeleteAsync(delegation);
+            await _delegationRepository.SaveChangesAsync();
+            await transaction.CommitAsync();
+            return true;
         }
-        await _delegationRepository.DeleteAsync(delegation);
-        await _delegationRepository.SaveChangesAsync();
-        return true;
+        catch (Exception)
+        {
+            transaction.Rollback();
+            return false;
+        }
     }
 }
