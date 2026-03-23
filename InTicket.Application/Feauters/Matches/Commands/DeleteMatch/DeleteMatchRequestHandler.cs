@@ -10,13 +10,24 @@ public class DeleteMatchRequestHandler : IRequestHandler<DeleteMatchRequest , bo
     
     public async Task<bool> Handle(DeleteMatchRequest request, CancellationToken cancellationToken)
     {
-        var matchToDelete = await _matchRepository.GetByIdAsync(request.Id);
-        if (matchToDelete == null)
+        await using var transaction = await _matchRepository.BeginTransactionAsync();
+        try
         {
+            var matchToDelete = await _matchRepository.GetByIdAsync(request.Id);
+            if (matchToDelete == null)
+            {
+                return false;
+            }
+
+            await _matchRepository.DeleteAsync(matchToDelete);
+            await _matchRepository.SaveChangesAsync();
+            await transaction.CommitAsync();
+            return true;
+        } 
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
             return false;
         }
-        await _matchRepository.DeleteAsync(matchToDelete);
-        await _matchRepository.SaveChangesAsync();
-        return true;
     }
 }

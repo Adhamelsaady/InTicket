@@ -21,25 +21,36 @@ public class CreateMatchRequestHandler : IRequestHandler<CreateMatchRequest , Cr
     public async Task<CreateMatchRequestResponse> Handle(CreateMatchRequest request, CancellationToken cancellationToken)
     {
         var matchEntity = _mapper.Map<Match>(request);
-        await _matchRepository.AddAsync(matchEntity);
-        await _matchRepository.SaveChangesAsync();
-        var ticketsToBatch = request.TicketsDistribution.SelectMany(item =>
+        await using var transaction = await _matchRepository.BeginTransactionAsync();
+        try
         {
-            var ticketClass = item.Key;
-            var ticketData = item.Value;
-            return Enumerable.Range(0, ticketData.Count).Select(_ => new MatchTicket
+
+            await _matchRepository.AddAsync(matchEntity);
+            await _matchRepository.SaveChangesAsync();
+            var ticketsToBatch = request.TicketsDistribution.SelectMany(item =>
             {
-                TicketId = Guid.NewGuid(),
-                Price = ticketData.Price,
-                MatchId = matchEntity.Id,
-                HomeTeamTicket = ticketData.IsHomeTeam,
-                TicketClass = ticketClass,
-            });
-        }).ToList();
-        if (ticketsToBatch.Count > 0)
-        {
-            await _ticketRepository.AddRangeAsync(ticketsToBatch);
+                var ticketClass = item.Key;
+                var ticketData = item.Value;
+                return Enumerable.Range(0, ticketData.Count).Select(_ => new MatchTicket
+                {
+                    TicketId = Guid.NewGuid(),
+                    Price = ticketData.Price,
+                    MatchId = matchEntity.Id,
+                    HomeTeamTicket = ticketData.IsHomeTeam,
+                    TicketClass = ticketClass,
+                });
+            }).ToList();
+            if (ticketsToBatch.Count > 0)
+            {
+                await _ticketRepository.AddRangeAsync(ticketsToBatch);
+            }
+            await transaction.CommitAsync();
+            return new CreateMatchRequestResponse { Id = matchEntity.Id };
         }
-        return new CreateMatchRequestResponse { Id = matchEntity.Id };
+        catch (Exception e)
+        {
+            await transaction.RollbackAsync();
+            return null;
+        }
     }
 }
