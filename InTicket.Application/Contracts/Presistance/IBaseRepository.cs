@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using InTicket.Domain;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace InTicket.Application.Contracts.Presistance;
 
@@ -14,5 +15,5 @@ public interface IBaseRepository <T> where T : class
     Task<int> SaveChangesAsync();
     Task<ApplicationUser?> GetByNationalIdAsync(string nationalId);
     Task AddRangeAsync(IEnumerable<T> entities);
-
+    Task<IDbContextTransaction> BeginTransactionAsync();
 }

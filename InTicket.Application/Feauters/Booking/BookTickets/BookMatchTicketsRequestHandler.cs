@@ -37,29 +37,39 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         if (!await ValidateBooking(request, match) ||
             await AnyUserHasBooked(request))
             return new BookMatchTicketsResponse() { IsSuccess = false };
-        var tickets = await HoldTheTickets(request);
-        if (tickets.Contains(null) || tickets.Count == 0)
-            return new BookMatchTicketsResponse() { IsSuccess = false };
+        await using var transaction = await _paymentRepository.BeginTransactionAsync();
+        try
+        {
+            var tickets = await HoldTheTickets(request);
+            if (tickets.Contains(null) || tickets.Count == 0)
+                return new BookMatchTicketsResponse() { IsSuccess = false };
 
-        var payment = new Payment()
+            var payment = new Payment()
+            {
+                PaymentId = Guid.NewGuid(),
+                UserId = request.UserId,
+                Price = tickets.Sum(t => t.Price),
+                ExpirationDate = tickets[0].HeldExpiresAt.Value,
+                TicketIds = tickets.Select(t => t.TicketId).ToList(),
+                Done = false
+            };
+            await _paymentRepository.AddAsync(payment);
+            await _paymentRepository.SaveChangesAsync();
+            await transaction.CommitAsync();
+            return new BookMatchTicketsResponse()
+            {
+                IsSuccess = true,
+                PaymentCode = payment.PaymentId,
+                TotalPrice = payment.Price,
+                TotalTickets = tickets.Count,
+                ExpirationDate = payment.ExpirationDate
+            };
+        } 
+        catch (Exception)
         {
-            PaymentId = Guid.NewGuid(),
-            UserId = request.UserId,
-            Price = tickets.Sum(t => t.Price),
-            ExpirationDate = tickets[0].HeldExpiresAt.Value,
-            TicketIds = tickets.Select(t => t.TicketId).ToList(),
-            Done = false
-        };
-        await _paymentRepository.AddAsync(payment);
-        await _paymentRepository.SaveChangesAsync();
-        return new BookMatchTicketsResponse()
-        {
-            IsSuccess = true,
-            PaymentCode = payment.PaymentId,
-            TotalPrice = payment.Price,
-            TotalTickets = tickets.Count,
-            ExpirationDate = payment.ExpirationDate
-        };
+            await transaction.RollbackAsync();
+            return new BookMatchTicketsResponse() { IsSuccess = false };
+        }
     }
 
     private async Task<bool> ValidateBooking(BookMatchTicketsRequest request, Match match)

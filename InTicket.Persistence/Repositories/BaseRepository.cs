@@ -1,6 +1,7 @@
 ﻿using InTicket.Application.Contracts.Presistance;
 using InTicket.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace InTicket.Persistence.Repositories;
 
@@ -10,6 +11,11 @@ public class BaseRepository<T> : IBaseRepository<T> where T : class
     public BaseRepository(InTicketDbContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
+    {
+        return await _dbContext.Database.BeginTransactionAsync();
     }
     
     public async Task<T> GetByIdAsync(Guid id)
