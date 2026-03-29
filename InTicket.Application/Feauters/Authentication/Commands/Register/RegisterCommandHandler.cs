@@ -84,6 +84,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
 
         return new AuthenticationResponse
         {
+            Success =  true,
             Token = token.RefreshToken,
             RefreshToken = token.RefreshToken,
             Email = user.Email!,

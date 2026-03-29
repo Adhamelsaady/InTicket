@@ -114,7 +114,6 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         {
             if (await _matchTicketRepository.UserHasTicketForMatchAsync(ticket.BookingForUserId, request.MatchId))
             {
-                Console.WriteLine("Ticket Has Booked for " + ticket.BookingForUserId);
                 return true;
             }
         }
@@ -130,7 +129,6 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
             var ticketToAdd =
                 await _matchTicketRepository.GetRandomTicketAsync(ticketForBooking.Class, request.MatchId,
                     ticketForBooking.BookingForUserId);
-            Console.WriteLine("This is ticket id " + ticketToAdd.TicketId);
             ticketToAdd.HolderId = ticketForBooking.BookingForUserId;
             ticketToAdd.Status = TicketStatus.Held;
             ticketToAdd.HeldExpiresAt = DateTime.UtcNow.AddHours(1);
