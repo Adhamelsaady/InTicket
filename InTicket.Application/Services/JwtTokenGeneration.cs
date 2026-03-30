@@ -45,7 +45,7 @@ public class JwtTokenGeneration : IJwtTokenGeneration
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(_configuration.GetValue<int>("Jwt:Lifetime")), // todo : update it to 5 minutes
+            expires: DateTime.UtcNow.AddHours(_configuration.GetValue<int>("Jwt:Lifetime")), // todo : update it to 5 minutes
             signingCredentials: credentials
         );
 

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("InTicket.Domain")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+3b8de763a7c5562bf47f41d325c8d10e2aab767f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c703ff799817b9efd9dd77f38feed34fca5eb8e")]
 [assembly: System.Reflection.AssemblyProductAttribute("InTicket.Domain")]
 [assembly: System.Reflection.AssemblyTitleAttribute("InTicket.Domain")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

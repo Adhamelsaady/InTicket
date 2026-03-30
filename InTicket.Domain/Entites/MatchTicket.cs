@@ -8,6 +8,7 @@ public class MatchTicket : Ticket
     public bool HomeTeamTicket {get; set;}
     
     public MatchTicketClass TicketClass { get; set; }
+    public byte[] RowVersion { get; set; }
 }
 
 public enum MatchTicketClass

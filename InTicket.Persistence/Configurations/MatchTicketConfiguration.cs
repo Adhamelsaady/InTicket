@@ -16,6 +16,9 @@ public static class MatchTicketConfiguration
                 .OnDelete(DeleteBehavior.Restrict);
             entity.Property(mt => mt.MatchId)
                 .IsRequired();
+            entity.Property(t => t.RowVersion)
+                .IsRowVersion()
+                .IsRequired();
         });
     }
 }
