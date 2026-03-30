@@ -33,17 +33,21 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         var match = await _matchRepository.GetMatchByIdAsync(request.MatchId, false);
         if (match == null)
             return new BookMatchTicketsResponse() { IsSuccess = false };
-
-        if (!await ValidateBooking(request, match) ||
-            await AnyUserHasBooked(request))
+        Console.WriteLine("validation 1");
+        if (!await ValidateBooking(request, match) || await AnyUserHasBooked(request))
             return new BookMatchTicketsResponse() { IsSuccess = false };
+        Console.WriteLine("validation 2");
         await using var transaction = await _paymentRepository.BeginTransactionAsync();
         try
         {
+            if (await AnyUserHasBooked(request))
+                return new BookMatchTicketsResponse() { IsSuccess = false };
+            Console.WriteLine("validation 3");
             var tickets = await HoldTheTickets(request);
             if (tickets.Contains(null) || tickets.Count == 0)
                 return new BookMatchTicketsResponse() { IsSuccess = false };
-
+            Console.WriteLine($"validation 4 , {tickets.Count} tickets");
+            await _paymentRepository.SaveChangesAsync();
             var payment = new Payment()
             {
                 PaymentId = Guid.NewGuid(),
@@ -65,9 +69,11 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
                 ExpirationDate = payment.ExpirationDate
             };
         } 
-        catch (Exception)
+        catch (Exception e)
         {
             await transaction.RollbackAsync();
+            Console.WriteLine("EL Transaction Byza");
+            Console.WriteLine(e.ToString());
             return new BookMatchTicketsResponse() { IsSuccess = false };
         }
     }
@@ -75,11 +81,6 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
     private async Task<bool> ValidateBooking(BookMatchTicketsRequest request, Match match)
     {
         var ticketsList = request.MatchTicketForBookingDtos;
-        foreach (var ticket in ticketsList)
-        {
-            Console.WriteLine(ticket.BookingForUserId);
-            Console.WriteLine(ticket.Class);
-        }
 
         HashSet<string> BookingForIds = new HashSet<string>();
         for (int i = 0; i < ticketsList.Count; ++i)
@@ -123,18 +124,17 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
 
     private async Task<IList<Ticket>> HoldTheTickets(BookMatchTicketsRequest request)
     {
-        List<Ticket> result = new List<Ticket>();
+        var result = new List<Ticket>();
         foreach (var ticketForBooking in request.MatchTicketForBookingDtos)
         {
             var ticketToAdd =
-                await _matchTicketRepository.GetRandomTicketAsync(ticketForBooking.Class, request.MatchId,
+                await _matchTicketRepository.GetAndLockTicketAsync(ticketForBooking.Class, request.MatchId,
                     ticketForBooking.BookingForUserId);
             ticketToAdd.HolderId = ticketForBooking.BookingForUserId;
             ticketToAdd.Status = TicketStatus.Held;
             ticketToAdd.HeldExpiresAt = DateTime.UtcNow.AddHours(1);
-            result.Add(ticketToAdd);
+            result.Add(ticketToAdd);    
         }
-
         return result;
     }
 }

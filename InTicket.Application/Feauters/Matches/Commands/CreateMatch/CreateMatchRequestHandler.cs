@@ -24,7 +24,6 @@ public class CreateMatchRequestHandler : IRequestHandler<CreateMatchRequest , Cr
         await using var transaction = await _matchRepository.BeginTransactionAsync();
         try
         {
-
             await _matchRepository.AddAsync(matchEntity);
             await _matchRepository.SaveChangesAsync();
             var ticketsToBatch = request.TicketsDistribution.SelectMany(item =>
@@ -40,17 +39,21 @@ public class CreateMatchRequestHandler : IRequestHandler<CreateMatchRequest , Cr
                     TicketClass = ticketClass,
                 });
             }).ToList();
+            Console.WriteLine(ticketsToBatch);
             if (ticketsToBatch.Count > 0)
             {
                 await _ticketRepository.AddRangeAsync(ticketsToBatch);
             }
+            var changes =await _ticketRepository.SaveChangesAsync();
+            Console.WriteLine(cancellationToken);
             await transaction.CommitAsync();
             return new CreateMatchRequestResponse { Id = matchEntity.Id };
         }
         catch (Exception e)
         {
+            Console.WriteLine(e.ToString());
             await transaction.RollbackAsync();
-            return null;
+            return  new CreateMatchRequestResponse { };
         }
     }
 }

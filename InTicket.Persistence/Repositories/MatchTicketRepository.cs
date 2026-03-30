@@ -22,17 +22,41 @@ public class MatchTicketRepository : IMatchTicketRepository
         return true;
     }
 
-    public async Task<MatchTicket> GetRandomTicketAsync(MatchTicketClass matchTicketClass, Guid matchId, string UserId)
+    public async Task<MatchTicket?> GetAndLockTicketAsync(
+        MatchTicketClass matchTicketClass, Guid matchId, string userId)
     {
-        var tickets = _dbContext.MatchTickets.AsQueryable();
-        var ticket = await tickets.FirstOrDefaultAsync(t => t.MatchId == matchId &&
-                                                            matchTicketClass == t.TicketClass &&
-                                                            (t.Status == TicketStatus.Open ||
-                                                             (t.Status == TicketStatus.Held &&
-                                                              t.HeldExpiresAt < DateTime.UtcNow)));
-        return ticket;
-    }
+        // SqlQueryRaw<Guid> expects the column to be named "Value"
+        var ticketId = await _dbContext.Database
+            .SqlQueryRaw<Guid>(@"
+            SELECT TOP 1 TicketId AS Value
+            FROM MatchTickets WITH (UPDLOCK, ROWLOCK)
+            WHERE MatchId = {0}
+              AND TicketClass = {1}
+              AND (
+                    Status = {2}
+                    OR (Status = {3} AND HeldExpiresAt < GETUTCDATE())
+                  )",
+                matchId,
+                (int)matchTicketClass,
+                (int)TicketStatus.Open,
+                (int)TicketStatus.Held)
+            .FirstOrDefaultAsync();
 
+        if (ticketId == Guid.Empty)
+            return null;
+
+        return await _dbContext.MatchTickets
+            .FirstOrDefaultAsync(t => t.TicketId == ticketId);
+    }
+    public async Task<bool> UserHasActiveTicketForMatchAsync(string userId, Guid matchId)
+    {
+        return await _dbContext.MatchTickets
+            .AnyAsync(t =>
+                t.MatchId == matchId &&
+                t.HolderId == userId &&
+                (t.Status == TicketStatus.Held || t.Status == TicketStatus.Booked) &&
+                t.HeldExpiresAt > DateTime.UtcNow);
+    }
     public async Task ChangeTicKetStatus(Guid TicketId, TicketStatus ticketStatus)
     {
         var ticket = _dbContext.MatchTickets.FirstOrDefault(t => t.TicketId == TicketId);
