@@ -39,21 +39,18 @@ public class CreateMatchRequestHandler : IRequestHandler<CreateMatchRequest , Cr
                     TicketClass = ticketClass,
                 });
             }).ToList();
-            Console.WriteLine(ticketsToBatch);
             if (ticketsToBatch.Count > 0)
             {
                 await _ticketRepository.AddRangeAsync(ticketsToBatch);
             }
-            var changes =await _ticketRepository.SaveChangesAsync();
-            Console.WriteLine(cancellationToken);
+            await _ticketRepository.SaveChangesAsync();
             await transaction.CommitAsync();
             return new CreateMatchRequestResponse { Id = matchEntity.Id };
         }
         catch (Exception e)
         {
-            Console.WriteLine(e.ToString());
             await transaction.RollbackAsync();
-            return  new CreateMatchRequestResponse { };
+            return null;
         }
     }
 }

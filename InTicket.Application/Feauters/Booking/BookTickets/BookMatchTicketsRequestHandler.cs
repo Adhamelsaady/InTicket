@@ -33,20 +33,16 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         var match = await _matchRepository.GetMatchByIdAsync(request.MatchId, false);
         if (match == null)
             return new BookMatchTicketsResponse() { IsSuccess = false };
-        Console.WriteLine("validation 1");
         if (!await ValidateBooking(request, match) || await AnyUserHasBooked(request))
             return new BookMatchTicketsResponse() { IsSuccess = false };
-        Console.WriteLine("validation 2");
         await using var transaction = await _paymentRepository.BeginTransactionAsync();
         try
         {
             if (await AnyUserHasBooked(request))
                 return new BookMatchTicketsResponse() { IsSuccess = false };
-            Console.WriteLine("validation 3");
             var tickets = await HoldTheTickets(request);
             if (tickets.Contains(null) || tickets.Count == 0)
                 return new BookMatchTicketsResponse() { IsSuccess = false };
-            Console.WriteLine($"validation 4 , {tickets.Count} tickets");
             await _paymentRepository.SaveChangesAsync();
             var payment = new Payment()
             {
@@ -72,8 +68,6 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         catch (Exception e)
         {
             await transaction.RollbackAsync();
-            Console.WriteLine("EL Transaction Byza");
-            Console.WriteLine(e.ToString());
             return new BookMatchTicketsResponse() { IsSuccess = false };
         }
     }
