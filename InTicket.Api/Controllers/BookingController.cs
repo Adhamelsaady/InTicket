@@ -10,7 +10,7 @@ using Stripe;
 namespace InTicket.Api.Controllers;
 
 [ApiController]
-[Route("api/Booking")]
+[Route("api/booking")]
 public class BookingController : ControllerBase
 {
     private readonly IStripePaymentServices _paymentService;

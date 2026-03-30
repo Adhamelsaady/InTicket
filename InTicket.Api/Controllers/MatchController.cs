@@ -60,7 +60,7 @@ public class MatchController : ControllerBase
             result);
     }
 
-    [HttpPut("{id::guid}")]
+    [HttpPut("{id::guid}/activate")]
     [Authorize(Roles = "Admin")]
     public async Task<IActionResult> ActivateMatchBooking([FromRoute] Guid id)
     {
