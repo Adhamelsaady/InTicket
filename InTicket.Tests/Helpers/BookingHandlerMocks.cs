@@ -1,3 +1,12 @@
+using InTicket.Application.Contracts.Presistance;
+using InTicket.Application.Feauters.Booking.BookTickets;
+using InTicket.Domain;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage;
+using Moq;
+
+namespace InTicket.Tests.Helpers;
+
 public class BookingHandlerMocks
 {
     public Mock<IDelegationsRepository>    Delegations  { get; } = new();
