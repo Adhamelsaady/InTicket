@@ -1,4 +1,4 @@
-﻿using InTicket.Application.Contracts;
+using InTicket.Application.Contracts;
 using InTicket.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
@@ -7,36 +7,30 @@ namespace InTicket.Application.Feauters.Authentication.Confirmations.EmailConfir
 
 public class EmailConfirmationRequestHandler : IRequestHandler<EmailConfirmationRequest, bool>
 {
+    private const int MaxOtpAttempts       = 10;
+    private const int LockoutWindowMinutes = 15;
+
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IOtpService _otpService;
 
-    public EmailConfirmationRequestHandler(UserManager<ApplicationUser> userManager
-        , IOtpService otpService)
+    public EmailConfirmationRequestHandler(
+        UserManager<ApplicationUser> userManager,
+        IOtpService otpService)
     {
         _userManager = userManager;
-        _otpService = otpService;
+        _otpService  = otpService;
     }
 
     public async Task<bool> Handle(EmailConfirmationRequest request, CancellationToken cancellationToken)
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
-        if (user == null)
-        {
+        if (user is null)
             return false;
-        }
 
-        if (user.OtpAttempts >= 10 &&
-            user.LastOtpAttemptAt.HasValue &&
-            DateTime.UtcNow < user.LastOtpAttemptAt.Value.AddMinutes(15))
-        {
+        if (IsLockedOut(user))
             return false;
-        }
 
-        if (!user.LastOtpAttemptAt.HasValue ||
-            DateTime.UtcNow >= user.LastOtpAttemptAt.Value.AddMinutes(15))
-        {
-            user.OtpAttempts = 0;
-        }
+        ResetCounterIfWindowExpired(user);
 
         user.OtpAttempts++;
         user.LastOtpAttemptAt = DateTime.UtcNow;
@@ -47,13 +41,30 @@ public class EmailConfirmationRequestHandler : IRequestHandler<EmailConfirmation
             return false;
         }
 
-        user.EmailConfirmed = true;
-        user.EmailConfirmationOtp = null;
+        user.EmailConfirmed                 = true;
+        user.EmailConfirmationOtp           = null;
         user.EmailConfirmationOtpExpiration = null;
-        user.OtpAttempts = 0;
-        user.LastOtpAttemptAt = null;
+        user.OtpAttempts                    = 0;
+        user.LastOtpAttemptAt               = null;
 
         var result = await _userManager.UpdateAsync(user);
         return result.Succeeded;
+    }
+
+    /// <summary>Returns true when the user has exceeded the attempt limit within the lockout window.</summary>
+    private static bool IsLockedOut(ApplicationUser user) =>
+        user.OtpAttempts >= MaxOtpAttempts &&
+        user.LastOtpAttemptAt.HasValue &&
+        DateTime.UtcNow < user.LastOtpAttemptAt.Value.AddMinutes(LockoutWindowMinutes);
+
+    /// <summary>Resets the attempt counter only after the lockout window has fully expired.</summary>
+    private static void ResetCounterIfWindowExpired(ApplicationUser user)
+    {
+        if (user.OtpAttempts >= MaxOtpAttempts &&
+            user.LastOtpAttemptAt.HasValue &&
+            DateTime.UtcNow >= user.LastOtpAttemptAt.Value.AddMinutes(LockoutWindowMinutes))
+        {
+            user.OtpAttempts = 0;
+        }
     }
 }

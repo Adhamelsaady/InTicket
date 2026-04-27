@@ -23,10 +23,10 @@ public static class MockHelpers
            new Mock<IServiceProvider>().Object,
            new Mock<ILogger<UserManager<ApplicationUser>>>().Object);
 
-        UserManagerMock.Object.UserValidators.Add(new UserValidator<ApplicationUser>());
-        UserManagerMock.Object.PasswordValidators.Add(new PasswordValidator<ApplicationUser>());
+        userManagerMock.Object.UserValidators.Add(new UserValidator<ApplicationUser>());
+        userManagerMock.Object.PasswordValidators.Add(new PasswordValidator<ApplicationUser>());
 
-        return UserManagerMock;
+        return userManagerMock;
     }
 
     public static Mock<SignInManager<ApplicationUser>> MockSignInManager(
