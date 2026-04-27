@@ -1,7 +1,10 @@
+using InTicket.Application.Contracts.Presistance;
+using InTicket.Application.Feauters.Booking.BookTickets;
 using InTicket.Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -66,3 +69,4 @@ public static class MockHelpers
             InTicketId = Guid.NewGuid()
         };
 }
+
