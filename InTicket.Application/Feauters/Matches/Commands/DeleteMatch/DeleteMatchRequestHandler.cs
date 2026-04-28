@@ -1,4 +1,4 @@
-﻿using InTicket.Application.Contracts.Presistance;
+using InTicket.Application.Contracts.Presistance;
 using InTicket.Domain;
 using MediatR;
 
@@ -6,8 +6,13 @@ namespace InTicket.Application.Feauters.Matches.Commands.DeleteMatch;
 
 public class DeleteMatchRequestHandler : IRequestHandler<DeleteMatchRequest , bool>
 {
-    private readonly IBaseRepository <Match> _matchRepository;
-    
+    private readonly IBaseRepository<Match> _matchRepository;
+
+    public DeleteMatchRequestHandler(IBaseRepository<Match> matchRepository)
+    {
+        _matchRepository = matchRepository;
+    }
+
     public async Task<bool> Handle(DeleteMatchRequest request, CancellationToken cancellationToken)
     {
         await using var transaction = await _matchRepository.BeginTransactionAsync();

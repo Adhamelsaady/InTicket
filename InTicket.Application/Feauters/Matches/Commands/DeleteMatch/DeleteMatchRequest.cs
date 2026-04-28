@@ -1,6 +1,4 @@
-﻿using MediatR;
-using Org.BouncyCastle.Ocsp;
-
+using MediatR;
 namespace InTicket.Application.Feauters.Matches.Commands.DeleteMatch;
 
 public class DeleteMatchRequest : IRequest <bool>
