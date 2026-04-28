@@ -53,28 +53,28 @@ public static class BookingTestData
 
     public static BookMatchTicketsRequest SingleTicketRequest(
         string userId, bool isHomeTeam = true) => new()
-    {
-        UserId = userId,
-        MatchId = MatchId,
-        BookingDate = DateTime.UtcNow,
-        MatchTicketForBookingDtos = new List<MatchTicketForBookingDto>
+        {
+            UserId = userId,
+            MatchId = MatchId,
+            BookingDate = DateTime.UtcNow,
+            MatchTicketForBookingDtos = new List<MatchTicketForBookingDto>
         {
             new() { BookingForUserId = userId, isHomeTeam = isHomeTeam, Class = MatchTicketClass.FirstClass_Left }
         }
-    };
+        };
 
     public static BookMatchTicketsRequest MultiTicketRequest(
         string userId1, string userId2) => new()
-    {
-        UserId = userId1,
-        MatchId = MatchId,
-        BookingDate = DateTime.UtcNow,
-        MatchTicketForBookingDtos = new List<MatchTicketForBookingDto>
+        {
+            UserId = userId1,
+            MatchId = MatchId,
+            BookingDate = DateTime.UtcNow,
+            MatchTicketForBookingDtos = new List<MatchTicketForBookingDto>
         {
             new() { BookingForUserId = userId1, isHomeTeam = true, Class = MatchTicketClass.FirstClass_Left  },
             new() { BookingForUserId = userId2, isHomeTeam = true, Class = MatchTicketClass.FirstClass_Right }
         }
-    };
+        };
 
     public static BookMatchTicketsRequest DuplicateUserRequest(string userId) => new()
     {

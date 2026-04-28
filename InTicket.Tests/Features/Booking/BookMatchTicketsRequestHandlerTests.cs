@@ -169,9 +169,9 @@ public class BookMatchTicketsRequestHandlerTests
     public async Task Handle_WhenGeneralBookingOpen_AllowsNonFanToBookOppositeTeamSeat()
     {
         const string userId = "user-1";
-        var awayFan = BookingTestData.AwayTeamFan(userId); 
-        var ticket  = BookingTestData.AvailableTicket();
-        var request = BookingTestData.SingleTicketRequest(userId, isHomeTeam: true); 
+        var awayFan = BookingTestData.AwayTeamFan(userId);
+        var ticket = BookingTestData.AvailableTicket();
+        var request = BookingTestData.SingleTicketRequest(userId, isHomeTeam: true);
         _bookingHandlerMocks.SetupSuccessfulBooking(request, BookingTestData.OpenMatch(), awayFan, ticket);
         var result = await _bookingHandlerMocks.Handler.Handle(request, CancellationToken.None);
 
@@ -329,8 +329,6 @@ public class BookMatchTicketsRequestHandlerTests
         Assert.Equal(2, result.TotalTickets);
         Assert.Equal(300, result.TotalPrice);
     }
-
-    // ── Exception / rollback ─────────────────────────────────────────────────
 
     [Fact]
     public async Task Handle_WhenTicketLockThrows_ReturnsFailure()

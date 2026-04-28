@@ -83,6 +83,18 @@
       "targetGraphs": [
         "net9.0"
       ]
+    },
+    {
+      "code": "NU1902",
+      "level": "Warning",
+      "message": "Package 'MailKit' 4.14.1 has a known moderate severity vulnerability, https://github.com/advisories/GHSA-9j88-vvj5-vhgr",
+      "projectPath": "D:\\InTicket\\InTicket.Application\\InTicket.Application.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\InTicket\\InTicket.Application\\InTicket.Application.csproj",
+      "libraryId": "MailKit",
+      "targetGraphs": [
+        "net9.0"
+      ]
     }
   ]
 }

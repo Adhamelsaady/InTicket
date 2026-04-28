@@ -38,13 +38,13 @@ public class RegisterCommandHandlerTests
 
     private RegisterCommand ValidCommand() => new()
     {
-        Email       = "newuser@example.com",
-        Password    = "Password123!",
-        FirstName   = "Jane",
-        LastName    = "Doe",
-        UserName    = "janedoe",
+        Email = "newuser@example.com",
+        Password = "Password123!",
+        FirstName = "Jane",
+        LastName = "Doe",
+        UserName = "janedoe",
         PhoneNumber = "01012345678",
-        NationalId  = "12345678901234",
+        NationalId = "12345678901234",
         FavoriteTeamId = Guid.NewGuid()
     };
 

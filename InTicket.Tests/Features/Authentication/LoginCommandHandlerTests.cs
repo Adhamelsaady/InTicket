@@ -19,8 +19,8 @@ public class LoginCommandHandlerTests
 
     public LoginCommandHandlerTests()
     {
-        _mockUserManager    = MockHelpers.MockUserManager();
-        _mockSignInManager  = MockHelpers.MockSignInManager(_mockUserManager);
+        _mockUserManager = MockHelpers.MockUserManager();
+        _mockSignInManager = MockHelpers.MockSignInManager(_mockUserManager);
         _mockJwtTokenGeneration = new Mock<IJwtTokenGeneration>();
 
         _handler = new LoginCommandHandler(
@@ -48,7 +48,7 @@ public class LoginCommandHandlerTests
     public async Task Handle_WithValidCredentials_ReturnsSuccessWithToken()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: true);
+        var user = MockHelpers.CreateUser(emailConfirmed: true);
         var command = ValidCommand(user.Email!);
         SetupSuccessfulSignIn(user, new List<string> { "User" });
 
@@ -66,7 +66,7 @@ public class LoginCommandHandlerTests
     public async Task Handle_WithValidCredentials_ReturnsCorrectFullName()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(firstName: "Alice", lastName: "Smith");
+        var user = MockHelpers.CreateUser(firstName: "Alice", lastName: "Smith");
         var command = ValidCommand(user.Email!);
         SetupSuccessfulSignIn(user, new List<string> { "User" });
 
@@ -97,7 +97,7 @@ public class LoginCommandHandlerTests
     public async Task Handle_WithUnconfirmedEmail_ReturnsFailure()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: false);
+        var user = MockHelpers.CreateUser(emailConfirmed: false);
         var command = ValidCommand(user.Email!);
         _mockUserManager.Setup(x => x.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
 
@@ -113,7 +113,7 @@ public class LoginCommandHandlerTests
     public async Task Handle_WithWrongPassword_ReturnsFailure()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: true);
+        var user = MockHelpers.CreateUser(emailConfirmed: true);
         var command = ValidCommand(user.Email!, "WrongPass!");
         _mockUserManager.Setup(x => x.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
         _mockSignInManager
@@ -132,7 +132,7 @@ public class LoginCommandHandlerTests
     public async Task Handle_WithWrongPassword_NeverGeneratesToken()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: true);
+        var user = MockHelpers.CreateUser(emailConfirmed: true);
         var command = ValidCommand(user.Email!, "BadPass!");
         _mockUserManager.Setup(x => x.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
         _mockSignInManager
@@ -152,7 +152,7 @@ public class LoginCommandHandlerTests
     public async Task Handle_WithValidCredentials_ReturnsUserRoles()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: true);
+        var user = MockHelpers.CreateUser(emailConfirmed: true);
         var command = ValidCommand(user.Email!);
         SetupSuccessfulSignIn(user, new List<string> { "User", "Admin" });
 

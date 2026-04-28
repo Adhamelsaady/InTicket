@@ -17,7 +17,7 @@ public class EmailConfirmationRequestHandlerTests
     public EmailConfirmationRequestHandlerTests()
     {
         _mockUserManager = MockHelpers.MockUserManager();
-        _mockOtpService  = new Mock<IOtpService>();
+        _mockOtpService = new Mock<IOtpService>();
         _handler = new EmailConfirmationRequestHandler(
             _mockUserManager.Object,
             _mockOtpService.Object);

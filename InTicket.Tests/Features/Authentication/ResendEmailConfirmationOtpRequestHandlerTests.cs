@@ -18,8 +18,8 @@ public class ResendEmailConfirmationOtpRequestHandlerTests
 
     public ResendEmailConfirmationOtpRequestHandlerTests()
     {
-        _mockUserManager  = MockHelpers.MockUserManager();
-        _mockOtpService   = new Mock<IOtpService>();
+        _mockUserManager = MockHelpers.MockUserManager();
+        _mockOtpService = new Mock<IOtpService>();
         _mockEmailService = new Mock<IEmailService>();
 
         _handler = new ResendEmailConfirmationOtpRequestHandler(
@@ -33,7 +33,7 @@ public class ResendEmailConfirmationOtpRequestHandlerTests
     public async Task Handle_WithValidUnconfirmedUser_ReturnsTrueAndSendsEmail()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: false);
+        var user = MockHelpers.CreateUser(emailConfirmed: false);
         var request = new ResendEmailConfirmationOtpRequest { Email = user.Email! };
         _mockUserManager.Setup(x => x.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
         _mockOtpService.Setup(x => x.GenerateOtp()).Returns("OTP123");
@@ -93,7 +93,7 @@ public class ResendEmailConfirmationOtpRequestHandlerTests
     public async Task Handle_WithAlreadyConfirmedEmail_ReturnsFalse()
     {
         // Arrange — user already confirmed, so resend should be rejected
-        var user    = MockHelpers.CreateUser(emailConfirmed: true);
+        var user = MockHelpers.CreateUser(emailConfirmed: true);
         var request = new ResendEmailConfirmationOtpRequest { Email = user.Email! };
         _mockUserManager.Setup(x => x.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
 
@@ -111,7 +111,7 @@ public class ResendEmailConfirmationOtpRequestHandlerTests
     public async Task Handle_WhenUpdateFails_ReturnsFalse()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: false);
+        var user = MockHelpers.CreateUser(emailConfirmed: false);
         var request = new ResendEmailConfirmationOtpRequest { Email = user.Email! };
         _mockUserManager.Setup(x => x.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
         _mockOtpService.Setup(x => x.GenerateOtp()).Returns("111111");
@@ -129,7 +129,7 @@ public class ResendEmailConfirmationOtpRequestHandlerTests
     public async Task Handle_WhenUpdateFails_DoesNotSendEmail()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: false);
+        var user = MockHelpers.CreateUser(emailConfirmed: false);
         var request = new ResendEmailConfirmationOtpRequest { Email = user.Email! };
         _mockUserManager.Setup(x => x.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
         _mockOtpService.Setup(x => x.GenerateOtp()).Returns("000000");

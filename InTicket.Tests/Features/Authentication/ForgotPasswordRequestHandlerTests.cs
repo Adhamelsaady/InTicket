@@ -18,8 +18,8 @@ public class ForgotPasswordRequestHandlerTests
 
     public ForgotPasswordRequestHandlerTests()
     {
-        _mockUserManager  = MockHelpers.MockUserManager();
-        _mockOtpService   = new Mock<IOtpService>();
+        _mockUserManager = MockHelpers.MockUserManager();
+        _mockOtpService = new Mock<IOtpService>();
         _mockEmailService = new Mock<IEmailService>();
 
         _handler = new ForgotPasswordRequestHandler(
@@ -32,7 +32,7 @@ public class ForgotPasswordRequestHandlerTests
     public async Task Handle_WithExistingConfirmedUser_ReturnsTrueAndSendsOtp()
     {
         // Arrange
-        var user    = MockHelpers.CreateUser(emailConfirmed: true);
+        var user = MockHelpers.CreateUser(emailConfirmed: true);
         var request = new ForgotPasswordRequest { Email = user.Email! };
         _mockUserManager.Setup(x => x.FindByEmailAsync(user.Email!)).ReturnsAsync(user);
         _mockOtpService.Setup(x => x.GenerateOtp()).Returns("ABCDEF");

@@ -9,13 +9,13 @@ namespace InTicket.Tests.Helpers;
 
 public class BookingHandlerMocks
 {
-    public Mock<IDelegationsRepository>    Delegations  { get; } = new();
-    public Mock<IMatchRepository>          Matches      { get; } = new();
+    public Mock<IDelegationsRepository> Delegations { get; } = new();
+    public Mock<IMatchRepository> Matches { get; } = new();
     public Mock<UserManager<ApplicationUser>> UserManager { get; }
-    public Mock<IMatchTicketRepository>    MatchTickets { get; } = new();
-    public Mock<IBaseRepository<Payment>>  Payments     { get; } = new();
-    public Mock<IDbContextTransaction>     Transaction  { get; } = new();
-    public BookMatchTicketsRequestHandler  Handler      { get; }
+    public Mock<IMatchTicketRepository> MatchTickets { get; } = new();
+    public Mock<IBaseRepository<Payment>> Payments { get; } = new();
+    public Mock<IDbContextTransaction> Transaction { get; } = new();
+    public BookMatchTicketsRequestHandler Handler { get; }
 
     public BookingHandlerMocks()
     {
@@ -34,9 +34,9 @@ public class BookingHandlerMocks
     }
     public void SetupSuccessfulBooking(
         BookMatchTicketsRequest request,
-        InTicket.Domain.Match   match,
-        ApplicationUser         user,
-        MatchTicket             ticket)
+        InTicket.Domain.Match match,
+        ApplicationUser user,
+        MatchTicket ticket)
     {
         Matches.Setup(x => x.GetMatchByIdAsync(request.MatchId, false)).ReturnsAsync(match);
         UserManager.Setup(x => x.FindByIdAsync(user.Id)).ReturnsAsync(user);
