@@ -275,10 +275,15 @@ InTicket.Tests/
 │   │                          #   EmailConfirmation, ResendOtp handlers
 │   ├── Booking/               # BookMatchTickets (including fan-priority,
 │   │                          #   delegation checks, locking, rollback)
+│   ├── Matches/               # CreateMatch, ActivateMatch, DeleteMatch,
+│   │                          #   GetAllMatches, GetMatchById handlers
 │   └── Profile/               # AddDelegate, DeleteDelegation,
 │                              #   GetMyDelegations, GetPayments, GetPayment
 └── Helpers/
-    └── MockHelpers.cs         # Factory methods for UserManager / SignInManager mocks
+    ├── MockHelpers.cs         # Factory methods for UserManager / SignInManager mocks
+    ├── BookingHandlerMocks.cs / BookingTestData.cs
+    ├── MatchHandlerMocks.cs   / MatchTestData.cs
+    └── ProfileHandlerMocks.cs / ProfileTestData.cs
 ```
 
 Each feature folder contains:
@@ -297,6 +302,7 @@ dotnet test
 ```bash
 dotnet test --filter FullyQualifiedName~InTicket.Tests.Features.Profile
 dotnet test --filter FullyQualifiedName~InTicket.Tests.Features.Booking
+dotnet test --filter FullyQualifiedName~InTicket.Tests.Features.Matches
 dotnet test --filter FullyQualifiedName~InTicket.Tests.Features.Authentication
 ```
 
