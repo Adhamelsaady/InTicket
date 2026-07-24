@@ -10,7 +10,7 @@ using Stripe;
 namespace InTicket.Api.Controllers;
 
 [ApiController]
-[Route("api/booking")]
+[Route("api/")]
 public class BookingController : ControllerBase
 {
     private readonly IStripePaymentServices _paymentService;
@@ -25,7 +25,7 @@ public class BookingController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("{matchId:guid}/book")]
+    [HttpPost("matches/{matchId:guid}/bookings")]
     public async Task<IActionResult> BookTickets(List <MatchTicketForBookingDto> tickets , Guid matchId)
     {
         if (!ModelState.IsValid)
@@ -50,7 +50,7 @@ public class BookingController : ControllerBase
     }
     
     [Authorize]
-    [HttpPost("{matchId:guid}/complete_payment")]
+    [HttpPost("bookings/{matchId:guid}/payments")]
     public async Task<IActionResult> CompletePayment([FromBody] CompletePaymentRequest request)
     { 
         if (!ModelState.IsValid)
@@ -67,7 +67,7 @@ public class BookingController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
-    [HttpPost("webhook")]
+    [HttpPost("webhook/stripe")]
     [AllowAnonymous] 
     public async Task<IActionResult> StripeWebhook()
     {

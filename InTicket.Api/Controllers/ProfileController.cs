@@ -23,7 +23,7 @@ public class ProfileController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet("delegation", Name = "GetMyDelegation")]
+    [HttpGet("delegations", Name = "GetMyDelegation")]
     [Authorize]
     public async Task<IActionResult> GetMyDelegation()
     {
@@ -38,7 +38,7 @@ public class ProfileController : ControllerBase
         return Ok(myDelegation);
     }
 
-    [HttpPost("delegation")]
+    [HttpPost("delegations")]
     [Authorize]
     public async Task<IActionResult> Delegate([FromBody] [Required] [Length(14, 14)] DelegationForCreateDto delegationForCreateDto)
     {
@@ -59,7 +59,7 @@ public class ProfileController : ControllerBase
             , $"Your delegation to user with national id {delegationForCreateDto.DelegateNationalId} has been created.");
     }
 
-    [HttpDelete("delegation/{id::guid}")]
+    [HttpDelete("delegations/{id::guid}")]
     [Authorize]
     public async Task<IActionResult> DeleteDelegation([Required] Guid id)
     {

@@ -22,7 +22,7 @@ public class AuthController : ControllerBase
         _mediator = mediator;
     }
 
-    [HttpPost("register")]
+    [HttpPost("users")]
     public async Task<IActionResult> register(RegisterCommand registerCommand)
     {
         if (!ModelState.IsValid)
@@ -43,7 +43,7 @@ public class AuthController : ControllerBase
         });
     }
 
-    [HttpPost("login")]
+    [HttpPost("sessions")]
     public async Task<IActionResult> login(LoginCommand loginCommand)
     {
         if (!ModelState.IsValid)
@@ -60,7 +60,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("confirm_email")]
+    [HttpPost("email-confirmation")]
     public async Task<IActionResult> ConfirmEmail(EmailConfirmationRequest emailConfirmationRequest)
     {
         if (!ModelState.IsValid)
@@ -77,7 +77,7 @@ public class AuthController : ControllerBase
         return Ok();
     }
 
-    [HttpPost("resend_confirmation_otp")]
+    [HttpPost("email-confirmation/otps")]
     public async Task<IActionResult> ResendConfirmationDto(ResendEmailConfirmationOtpRequest
         resendEmailConfirmationOtpRequest)
     {
@@ -96,7 +96,7 @@ public class AuthController : ControllerBase
         return Ok(new { message = "OTP resent successfully! Please check your email." });
     }
 
-    [HttpPost("forgot_password")]
+    [HttpPost("password-reset")]
     public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest forgotPasswordRequest)
     {
         if (!ModelState.IsValid)
@@ -113,7 +113,7 @@ public class AuthController : ControllerBase
         return Ok(new { message = "If your email exists, you will receive a password reset OTP shortly." });
     }
 
-    [HttpPost("reset_password")]
+    [HttpPost("password-reset/otps")]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest resetPasswordRequest)
     {
         if (!ModelState.IsValid)
@@ -132,7 +132,7 @@ public class AuthController : ControllerBase
         return Ok(new { message = "Password reset successfully! You can now login with your new password." });
     }
 
-    [HttpPost("refresh_token")]
+    [HttpPost("tokens")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequest refreshTokenRequest)
     {
         if (!ModelState.IsValid)
@@ -145,7 +145,7 @@ public class AuthController : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("logout")]
+    [HttpDelete("sessions/current")]
     public async Task<IActionResult> Logout([FromBody] LogoutRequest logoutRequest)
     {
         if (!ModelState.IsValid)

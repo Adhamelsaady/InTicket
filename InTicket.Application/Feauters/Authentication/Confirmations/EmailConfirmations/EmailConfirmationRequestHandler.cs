@@ -7,7 +7,7 @@ namespace InTicket.Application.Feauters.Authentication.Confirmations.EmailConfir
 
 public class EmailConfirmationRequestHandler : IRequestHandler<EmailConfirmationRequest, bool>
 {
-    private const int MaxOtpAttempts       = 10;
+    private const int MaxOtpAttempts = 10;
     private const int LockoutWindowMinutes = 15;
 
     private readonly UserManager<ApplicationUser> _userManager;
@@ -18,7 +18,7 @@ public class EmailConfirmationRequestHandler : IRequestHandler<EmailConfirmation
         IOtpService otpService)
     {
         _userManager = userManager;
-        _otpService  = otpService;
+        _otpService = otpService;
     }
 
     public async Task<bool> Handle(EmailConfirmationRequest request, CancellationToken cancellationToken)
@@ -41,11 +41,11 @@ public class EmailConfirmationRequestHandler : IRequestHandler<EmailConfirmation
             return false;
         }
 
-        user.EmailConfirmed                 = true;
-        user.EmailConfirmationOtp           = null;
+        user.EmailConfirmed = true;
+        user.EmailConfirmationOtp = null;
         user.EmailConfirmationOtpExpiration = null;
-        user.OtpAttempts                    = 0;
-        user.LastOtpAttemptAt               = null;
+        user.OtpAttempts = 0;
+        user.LastOtpAttemptAt = null;
 
         var result = await _userManager.UpdateAsync(user);
         return result.Succeeded;
