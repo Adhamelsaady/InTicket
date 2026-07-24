@@ -4,6 +4,7 @@ using InTicket.Application.Contracts.Infrasructure;
 using InTicket.Domain;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace InTicket.Application.Feauters.Authentication.Register;
 
@@ -39,8 +40,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, Authentic
         // Guard: duplicate national ID
         // Note: plain FirstOrDefault (no EF async) is intentional — UserManager.Users
         // is an in-memory queryable in tests and works correctly in production too.
-        var duplicateNid = _userManager.Users
-            .FirstOrDefault(u => u.NationalId == request.NationalId);
+        var duplicateNid = await _userManager.Users
+            .FirstOrDefaultAsync(u => u.NationalId == request.NationalId);
         if (duplicateNid != null)
             return Failure("This national ID is already registered.");
 

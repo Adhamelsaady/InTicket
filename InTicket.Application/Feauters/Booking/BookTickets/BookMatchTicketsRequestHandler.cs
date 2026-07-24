@@ -33,7 +33,8 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
         var match = await _matchRepository.GetMatchByIdAsync(request.MatchId, false);
         if (match == null)
             return new BookMatchTicketsResponse() { IsSuccess = false };
-        if (!await ValidateBooking(request, match) || await AnyUserHasBooked(request))
+        
+        if(! await ValidateBooking(request, match))
             return new BookMatchTicketsResponse() { IsSuccess = false };
         await using var transaction = await _paymentRepository.BeginTransactionAsync();
         try
@@ -92,6 +93,8 @@ public class BookMatchTicketsRequestHandler : IRequestHandler<BookMatchTicketsRe
 
             var teamId = ticketsList[i].isHomeTeam ? match.HomeTeamId : match.AwayTeamId;
             var user = await _userManager.FindByIdAsync(booksFor);
+            if (user is null)
+                return false;
             if (teamId != user.FavoriteTeamId && match.GeneralBookingStart > DateTime.Now)
             {
                 return false;
