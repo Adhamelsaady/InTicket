@@ -27,7 +27,7 @@ public class RefreshTokenRepository : IRefreshTokenRepository
     public async Task <bool> MarkRefreshTokenAsRevokedAsync(string refreshToken)
     {
         var refreshTokenEntity = await GetRefreshTokenAsync(refreshToken);
-        refreshTokenEntity.isUsed = true;
+        refreshTokenEntity.isRevoked = true;
         return await _dbContext.SaveChangesAsync() > 0; 
     }
 }
